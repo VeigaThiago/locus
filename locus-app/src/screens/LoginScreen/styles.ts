@@ -6,6 +6,9 @@ export default StyleSheet.create({
     backgroundColor: colors.primary,
     flex: 1,
   },
+  faceBookButton: {
+    marginBottom: spacings.x3,
+  },
   buttonsContainer: {
     flex: 1,
     justifyContent: "center",

@@ -1,4 +1,5 @@
 export default {
+  x05: 4,
   x1: 8,
   x2: 12,
   x3: 16,
