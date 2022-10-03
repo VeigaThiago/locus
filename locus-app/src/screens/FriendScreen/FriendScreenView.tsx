@@ -1,33 +1,42 @@
-import * as React from "react";
-import { Text, View, StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { FriendList } from "../../components";
 import { colors } from "../../ui/tokens";
 
-interface FriendScreenViewProps {}
+type FriendData = {
+  id: string;
+  email: string;
+  name: string;
+  avatarUrl: string;
+};
 
-const FriendScreenView = (props: FriendScreenViewProps) => {
-  const confirmedFriends = [
-    {
-      name: "Mary Green",
-      email: "mary@email.com",
-      avatarUrl:
-        "https://i.pinimg.com/originals/1d/4d/69/1d4d69c694c8ba1034c0e9552f457ecf.jpg",
-    },
-    {
-      name: "Mary Green",
-      email: "mary@email.com",
-      avatarUrl:
-        "https://i.pinimg.com/originals/1d/4d/69/1d4d69c694c8ba1034c0e9552f457ecf.jpg",
-    },
-  ];
-  const pendingFriends = confirmedFriends;
+interface FriendScreenViewProps {
+  confirmedFriends: FriendData[];
+  pendingFriends: FriendData[];
+  onConfirmedFriendPress: (fdi: string) => void;
+  onPendingFriendPress: (fdi: string) => void;
+}
+
+const FriendScreenView = ({
+  confirmedFriends,
+  pendingFriends,
+  onConfirmedFriendPress,
+  onPendingFriendPress,
+}: FriendScreenViewProps) => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView>
-        <FriendList title={"Confirmados"} data={confirmedFriends} />
-        <FriendList title={"Pendentes"} data={pendingFriends} />
+        <FriendList
+          title={"Confirmados"}
+          data={confirmedFriends}
+          onItemPress={onConfirmedFriendPress}
+        />
+        <FriendList
+          title={"Pendentes"}
+          data={pendingFriends}
+          onItemPress={onPendingFriendPress}
+        />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
