@@ -22,7 +22,7 @@ import {
   RootTabScreenProps,
   TopTabParamList,
 } from "../../types";
-import { LoginScreen, GroupScreen, FriendScreen } from "../screens";
+import { LoginScreen, GroupScreen, FriendScreen, MapScreen } from "../screens";
 import { colors } from "../ui/tokens";
 
 export default function Navigation({
@@ -115,7 +115,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Map"
-        component={GroupScreen}
+        component={MapScreen}
         options={() => ({
           title: "Mapa",
           tabBarIcon: ({ color }) => (
