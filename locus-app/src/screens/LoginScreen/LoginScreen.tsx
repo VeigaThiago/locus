@@ -6,11 +6,7 @@ import styles from "./styles";
 const LoginScreen = ({ navigation }: RootStackScreenProps<"LoggedOut">) => {
   const onFaceBookPress = () => navigation.navigate("Root");
 
-  return (
-    <SafeAreaView style={styles.screen}>
-      <LoginScreenView onFacebookPress={onFaceBookPress} />
-    </SafeAreaView>
-  );
+  return <LoginScreenView onFacebookPress={onFaceBookPress} />;
 };
 
 export default LoginScreen;

@@ -13,7 +13,7 @@ const LoginScreenView = ({
   onFacebookPress = () => {},
   onGooglePress = () => {},
 }: LoginScreenViewProps) => (
-  <>
+  <SafeAreaView style={styles.screen}>
     <View style={styles.imageContainer}>
       <Image source={logo} style={styles.image} />
     </View>
@@ -33,7 +33,7 @@ const LoginScreenView = ({
         uppercase={false}
       />
     </View>
-  </>
+  </SafeAreaView>
 );
 
 export default LoginScreenView;
