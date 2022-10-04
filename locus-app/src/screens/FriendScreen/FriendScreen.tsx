@@ -9,22 +9,19 @@ const FriendScreen = ({}: FriendScreenProps) => {
       id: "1",
       name: "Mary Green",
       email: "mary@email.com",
-      avatarUrl:
-        "https://i.pinimg.com/originals/1d/4d/69/1d4d69c694c8ba1034c0e9552f457ecf.jpg",
+      avatarUrl: "https://source.unsplash.com/50x50/?portrait",
     },
     {
       id: "2",
       name: "Mary Green",
       email: "mary@email.com",
-      avatarUrl:
-        "https://i.pinimg.com/originals/1d/4d/69/1d4d69c694c8ba1034c0e9552f457ecf.jpg",
+      avatarUrl: "https://source.unsplash.com/50x50/?portrait",
     },
     {
       id: "3",
       name: "Mary Green",
       email: "",
-      avatarUrl:
-        "https://i.pinimg.com/originals/1d/4d/69/1d4d69c694c8ba1034c0e9552f457ecf.jpg",
+      avatarUrl: "https://source.unsplash.com/50x50/?portrait",
     },
   ];
 

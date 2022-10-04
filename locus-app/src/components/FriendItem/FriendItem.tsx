@@ -1,4 +1,4 @@
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome as Icon } from "@expo/vector-icons";
 import {
   Text,
   View,
@@ -19,7 +19,7 @@ interface FriendItemProps {
   rightContent?: {
     rightDescription?: string;
     icon?: {
-      name?: React.ComponentProps<typeof FontAwesome>["name"];
+      name?: React.ComponentProps<typeof Icon>["name"];
       color?: string;
       onPress?: () => void;
     };
@@ -53,7 +53,7 @@ const FriendItem = ({
           hitSlop={spacings.x1}
           style={{ marginLeft: spacings.x2 }}
         >
-          <FontAwesome size={20} {...iconProps} />
+          <Icon size={20} {...iconProps} />
         </Pressable>
       )}
     </View>

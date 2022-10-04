@@ -5,7 +5,7 @@ import FriendItem from "../FriendItem";
 
 interface FriendListProps {
   title?: string;
-  data?: { name: string; email: string; avatarUrl: string }[];
+  data?: { id: string; name: string; email: string; avatarUrl: string }[];
   onItemPress?: (id: string) => void;
 }
 

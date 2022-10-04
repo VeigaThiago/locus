@@ -1,25 +1,43 @@
-import * as React from "react";
-import { StyleSheet } from "react-native";
-import { Marker } from "react-native-maps";
+import { forwardRef, useRef } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { Callout, Marker } from "react-native-maps";
+import { colors } from "../../../ui/tokens";
 
 interface UserMarkerProps {
-  latitude?: string;
-  longitude?: string;
+  user: {
+    id: string;
+    name: string;
+    photoUrl: string;
+    coords: {
+      latitude: string;
+      longitude: string;
+    };
+  };
 }
 
-const UserMarker = ({ latitude, longitude }: UserMarkerProps) => {
+const UserMarker = ({ user }: UserMarkerProps) => {
   return (
     <Marker
       coordinate={{
-        latitude: parseFloat("-12.0"),
-        longitude: parseFloat("-38.0"),
+        latitude: parseFloat(user.coords.latitude),
+        longitude: parseFloat(user.coords.longitude),
       }}
-    />
+      title={user.name}
+    >
+      <Image source={{ uri: user.photoUrl }} style={styles.avatar} />
+    </Marker>
   );
 };
 
-export default UserMarker;
-
 const styles = StyleSheet.create({
-  container: {},
+  markerContainer: {},
+  avatar: {
+    borderWidth: 2,
+    borderColor: "green", //TODO
+    height: 40,
+    width: 40,
+    borderRadius: 40 / 2,
+  },
 });
+
+export default UserMarker;
