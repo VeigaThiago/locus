@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { View, StyleSheet, Dimensions, SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
+import { colors } from "../../ui/tokens";
 import { UserMarker, GroupSelector, UserSelection } from "./components";
 
 type Group = {
@@ -86,33 +87,39 @@ const MapScreenView = ({ groups = [] }: MapScreenViewProps) => {
   };
 
   return (
-    <View style={styles.container}>
-      <GroupSelector
-        onLeftPress={onLeftPress}
-        onRightPress={onRightPress}
-        name={selectedGroup.name}
-        participants={selectedGroup.participants}
-        onUserPress={onUserSelect}
-      />
-      <View style={{ top: 20 }}>
-        <MapView ref={_map} style={styles.map} maxZoomLevel={13}>
-          {selectedGroup.participants.map((user) => (
-            <UserMarker
-              user={user}
-              onPress={onUserSelect}
-              isCurrentUser={user.id === selectedUserId}
-            />
-          ))}
-        </MapView>
+    <SafeAreaView style={styles.screen}>
+      <View style={styles.container}>
+        <GroupSelector
+          onLeftPress={onLeftPress}
+          onRightPress={onRightPress}
+          name={selectedGroup.name}
+          participants={selectedGroup.participants}
+          onUserPress={onUserSelect}
+        />
+        <View style={{ top: 20 }}>
+          <MapView ref={_map} style={styles.map} maxZoomLevel={13}>
+            {selectedGroup.participants.map((user) => (
+              <UserMarker
+                user={user}
+                onPress={onUserSelect}
+                isCurrentUser={user.id === selectedUserId}
+              />
+            ))}
+          </MapView>
+        </View>
+        {selectedUser && <UserSelection user={selectedUser} />}
       </View>
-      {selectedUser && <UserSelection user={selectedUser} />}
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default MapScreenView;
 
 const styles = StyleSheet.create({
+  screen: {
+    backgroundColor: colors.white,
+    flex: 1,
+  },
   container: {
     flex: 1,
   },

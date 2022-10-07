@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { SafeAreaView } from "react-native";
 import MapScreenView, { MapScreenViewProps } from "./MapScreenView";
 
 interface MapScreenProps {}

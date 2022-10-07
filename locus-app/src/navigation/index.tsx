@@ -117,6 +117,7 @@ function BottomTabNavigator() {
         name="Map"
         component={MapScreen}
         options={() => ({
+          headerShown: false,
           title: "Mapa",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="location-pin" color={color} />
