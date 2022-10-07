@@ -10,17 +10,17 @@ type FriendData = {
 };
 
 interface FriendScreenViewProps {
-  confirmedFriends: FriendData[];
-  pendingFriends: FriendData[];
-  onConfirmedFriendPress: (fdi: string) => void;
-  onPendingFriendPress: (fdi: string) => void;
+  confirmedFriends?: FriendData[];
+  pendingFriends?: FriendData[];
+  onConfirmedFriendPress?: (fdi: string) => void;
+  onPendingFriendPress?: (fdi: string) => void;
 }
 
 const FriendScreenView = ({
-  confirmedFriends,
-  pendingFriends,
-  onConfirmedFriendPress,
-  onPendingFriendPress,
+  confirmedFriends = [],
+  pendingFriends = [],
+  onConfirmedFriendPress = () => {},
+  onPendingFriendPress = () => {},
 }: FriendScreenViewProps) => {
   return (
     <SafeAreaView style={styles.container}>

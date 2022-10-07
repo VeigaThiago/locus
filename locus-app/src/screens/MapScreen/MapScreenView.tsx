@@ -1,32 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { View, StyleSheet, Dimensions, SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
+import { GroupType } from "../../model/Group";
 import { colors } from "../../ui/tokens";
 import { UserMarker, GroupSelector, UserSelection } from "./components";
 
-type Group = {
-  name: string;
-  participants: {
-    id: string;
-    name: string;
-    photoUrl: string;
-    coords: {
-      latitude: string;
-      longitude: string;
-      batteryLevel: number;
-      lastUpdate: Date;
-    };
-  }[];
-};
-
 export interface MapScreenViewProps {
-  groups: Group[];
+  groups?: GroupType[];
 }
 
 const MapScreenView = ({ groups = [] }: MapScreenViewProps) => {
   const [selectedGroupIndex, setSelectedGroupIndex] = useState(0);
   const selectedGroup = useMemo(
-    () => groups[selectedGroupIndex] || {},
+    () => groups[selectedGroupIndex] || { participants: [] },
     [groups, selectedGroupIndex]
   );
 
@@ -39,12 +25,12 @@ const MapScreenView = ({ groups = [] }: MapScreenViewProps) => {
   const [selectedUserId, setSelectedUserId] = useState<string>();
   const clearSelectedUser = () => setSelectedUserId(undefined);
 
-  const selectedUser = selectedGroup.participants.find(
+  const selectedUser = selectedGroup?.participants?.find(
     ({ id }) => id === selectedUserId
   );
 
   const focusAllMap = () => {
-    const markerIds = selectedGroup.participants.map(({ id }) => id);
+    const markerIds = selectedGroup?.participants?.map(({ id }) => id);
     focusMap(markerIds);
   };
 
@@ -98,7 +84,7 @@ const MapScreenView = ({ groups = [] }: MapScreenViewProps) => {
         />
         <View style={{ top: 20 }}>
           <MapView ref={_map} style={styles.map} maxZoomLevel={13}>
-            {selectedGroup.participants.map((user) => (
+            {selectedGroup?.participants?.map((user) => (
               <UserMarker
                 user={user}
                 onPress={onUserSelect}
