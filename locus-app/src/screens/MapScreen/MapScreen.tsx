@@ -1,6 +1,5 @@
-import * as React from "react";
-import { StyleSheet } from "react-native";
-import MapScreenView from "./MapScreenView";
+import { useMemo } from "react";
+import MapScreenView, { MapScreenViewProps } from "./MapScreenView";
 
 interface MapScreenProps {}
 
@@ -8,6 +7,7 @@ const MapScreen = (props: MapScreenProps) => {
   const userId = "2";
 
   const groups = [
+    // Fetch
     {
       name: "Grupo do Carnaval",
       participants: [
@@ -18,6 +18,8 @@ const MapScreen = (props: MapScreenProps) => {
           coords: {
             latitude: "-12.0",
             longitude: "-38.0",
+            batteryLevel: 0.5,
+            lastUpdate: new Date("2015-03-25"),
           },
         },
         {
@@ -27,6 +29,8 @@ const MapScreen = (props: MapScreenProps) => {
           coords: {
             latitude: "-11.0",
             longitude: "-39.0",
+            batteryLevel: 0.5,
+            lastUpdate: new Date("2015-03-25"),
           },
         },
         {
@@ -36,6 +40,8 @@ const MapScreen = (props: MapScreenProps) => {
           coords: {
             latitude: "-13.0",
             longitude: "-37.0",
+            batteryLevel: 0.1,
+            lastUpdate: new Date("2015-03-25"),
           },
         },
         {
@@ -45,6 +51,8 @@ const MapScreen = (props: MapScreenProps) => {
           coords: {
             latitude: "-11.0",
             longitude: "-33.0",
+            batteryLevel: 0.9,
+            lastUpdate: new Date("2015-03-25"),
           },
         },
       ],
@@ -59,6 +67,8 @@ const MapScreen = (props: MapScreenProps) => {
           coords: {
             latitude: "-11.0",
             longitude: "-39.0",
+            batteryLevel: 0.6,
+            lastUpdate: new Date("2015-03-25"),
           },
         },
         {
@@ -68,13 +78,30 @@ const MapScreen = (props: MapScreenProps) => {
           coords: {
             latitude: "-12.0",
             longitude: "-37.0",
+            batteryLevel: 0.3,
+            lastUpdate: new Date("2015-03-25"),
           },
         },
       ],
     },
   ];
 
-  return <MapScreenView groups={groups} />;
+  const formattedGroups = useMemo(
+    () =>
+      groups.map((group) => {
+        const user = group.participants.find((user) => user.id === userId);
+        const friends = group.participants.filter((user) => user.id !== userId);
+        return {
+          ...group,
+          participants: [{ ...user, name: "Você" }, ...friends],
+        };
+      }),
+    [groups]
+  );
+
+  return (
+    <MapScreenView groups={formattedGroups as MapScreenViewProps["groups"]} />
+  );
 };
 
 export default MapScreen;

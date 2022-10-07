@@ -5,20 +5,20 @@ import {
   StyleSheet,
   Pressable,
   Animated,
-  FlatList,
-  Alert,
   Easing,
+  ScrollView,
 } from "react-native";
 import { SimpleLineIcons as Icon } from "@expo/vector-icons";
 import { colors, spacings, typography } from "../../../../ui/tokens";
-import { FriendItem } from "../../../../components";
 import { Friend } from "./components";
+import logo from "../../../../assets/images/Logo.png";
 
 interface GroupSelectorProps {
   name: string;
   onLeftPress?: () => void;
   onRightPress?: () => void;
   participants: { id: string; name: string; photoUrl: string }[];
+  onUserPress?: (uid: string) => void;
 }
 
 const GroupSelector = ({
@@ -26,6 +26,7 @@ const GroupSelector = ({
   onLeftPress,
   onRightPress,
   participants,
+  onUserPress = () => {},
 }: GroupSelectorProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const collapsedHeight = useRef(new Animated.Value(0)).current;
@@ -61,20 +62,25 @@ const GroupSelector = ({
         </Pressable>
       </View>
       <Animated.View style={{ maxHeight }}>
-        <FlatList
+        <ScrollView
           horizontal
           style={styles.collapse}
           showsHorizontalScrollIndicator={false}
           bounces={false}
-          data={participants}
-          renderItem={({ item }) => (
+        >
+          <Friend
+            title={"Todos"}
+            avatarSrc={logo}
+            onPress={() => onUserPress("")}
+          />
+          {participants.map((item) => (
             <Friend
               title={item.name.split(" ")[0]}
               avatarSrc={{ uri: item.photoUrl }}
-              onPress={() => Alert.alert(`Chamou ${item.id}`)}
+              onPress={() => onUserPress(item.id)}
             />
-          )}
-        />
+          ))}
+        </ScrollView>
       </Animated.View>
       <View style={{ alignItems: "center" }}>
         <Pressable
@@ -104,6 +110,10 @@ const styles = StyleSheet.create({
     zIndex: 2,
     width: "100%",
     position: "absolute",
+    shadowOffset: { width: 0, height: 3 },
+    shadowColor: "black",
+    shadowOpacity: 0.2,
+    elevation: 1,
   },
   collapseButton: {
     padding: spacings.x1,

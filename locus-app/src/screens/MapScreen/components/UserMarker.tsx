@@ -1,7 +1,6 @@
-import { forwardRef, useRef } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
-import { Callout, Marker } from "react-native-maps";
-import { colors } from "../../../ui/tokens";
+import { Image, StyleSheet } from "react-native";
+import { Marker } from "react-native-maps";
+import { convertPercentageToColor } from "../../../utils/color";
 
 interface UserMarkerProps {
   user: {
@@ -11,32 +10,47 @@ interface UserMarkerProps {
     coords: {
       latitude: string;
       longitude: string;
+      batteryLevel: number;
+      lastUpdate: Date;
     };
   };
+  onPress: (uid: string) => void;
+  isCurrentUser: boolean;
 }
 
-const UserMarker = ({ user }: UserMarkerProps) => {
-  return (
-    <Marker
-      coordinate={{
-        latitude: parseFloat(user.coords.latitude),
-        longitude: parseFloat(user.coords.longitude),
-      }}
-      title={user.name}
-    >
-      <Image source={{ uri: user.photoUrl }} style={styles.avatar} />
-    </Marker>
-  );
-};
+const UserMarker = ({ user, onPress, isCurrentUser }: UserMarkerProps) => (
+  <Marker
+    identifier={user.id}
+    coordinate={{
+      latitude: parseFloat(user.coords.latitude),
+      longitude: parseFloat(user.coords.longitude),
+    }}
+    title={user.name}
+    onPress={() => onPress(user.id)}
+  >
+    <Image
+      source={{ uri: user.photoUrl }}
+      style={[
+        styles.avatar,
+        { borderColor: convertPercentageToColor(user.coords.batteryLevel) },
+        isCurrentUser ? styles.selectedStyle : {},
+      ]}
+    />
+  </Marker>
+);
 
 const styles = StyleSheet.create({
   markerContainer: {},
   avatar: {
     borderWidth: 2,
-    borderColor: "green", //TODO
     height: 40,
     width: 40,
     borderRadius: 40 / 2,
+  },
+  selectedStyle: {
+    height: 46,
+    width: 46,
+    borderRadius: 46 / 2,
   },
 });
 

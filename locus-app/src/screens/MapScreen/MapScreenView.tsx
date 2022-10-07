@@ -1,8 +1,7 @@
-import { useMemo, useState } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { View, StyleSheet, Dimensions, SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
-import GroupSelector from "./components/GroupSelector";
-import UserMarker from "./components/UserMarker";
+import { UserMarker, GroupSelector, UserSelection } from "./components";
 
 type Group = {
   name: string;
@@ -13,10 +12,13 @@ type Group = {
     coords: {
       latitude: string;
       longitude: string;
+      batteryLevel: number;
+      lastUpdate: Date;
     };
   }[];
 };
-interface MapScreenViewProps {
+
+export interface MapScreenViewProps {
   groups: Group[];
 }
 
@@ -27,16 +29,60 @@ const MapScreenView = ({ groups = [] }: MapScreenViewProps) => {
     [groups, selectedGroupIndex]
   );
 
+  useEffect(() => {
+    setTimeout(() => focusAllMap(), 200);
+  }, [selectedGroup]);
+
+  const _map = useRef<MapView>();
+
+  const [selectedUserId, setSelectedUserId] = useState<string>();
+  const clearSelectedUser = () => setSelectedUserId(undefined);
+
+  const selectedUser = selectedGroup.participants.find(
+    ({ id }) => id === selectedUserId
+  );
+
+  const focusAllMap = () => {
+    const markerIds = selectedGroup.participants.map(({ id }) => id);
+    focusMap(markerIds);
+  };
+
+  const focusMap = (markerIds: string[]) => {
+    _map.current?.fitToSuppliedMarkers(markerIds, {
+      edgePadding: {
+        top: 50,
+        right: 50,
+        bottom: 50,
+        left: 50,
+      },
+      animated: true,
+    });
+  };
+
   const onLeftPress = () => {
     const nextIndex =
       selectedGroupIndex === 0 ? groups.length - 1 : selectedGroupIndex - 1;
-    setSelectedGroupIndex(nextIndex);
+    changeGroup(nextIndex);
   };
 
   const onRightPress = () => {
     const nextIndex =
       selectedGroupIndex === groups.length - 1 ? 0 : selectedGroupIndex + 1;
-    setSelectedGroupIndex(nextIndex);
+    changeGroup(nextIndex);
+  };
+
+  const changeGroup = (index: number) => {
+    clearSelectedUser();
+    setSelectedGroupIndex(index);
+  };
+
+  const onUserSelect = (uid: string) => {
+    if (uid === "") {
+      focusAllMap();
+    } else {
+      focusMap([uid]);
+      setSelectedUserId(uid);
+    }
   };
 
   return (
@@ -46,14 +92,20 @@ const MapScreenView = ({ groups = [] }: MapScreenViewProps) => {
         onRightPress={onRightPress}
         name={selectedGroup.name}
         participants={selectedGroup.participants}
+        onUserPress={onUserSelect}
       />
-      <View style={{ top: -20 }}>
-        <MapView style={styles.map}>
+      <View style={{ top: 20 }}>
+        <MapView ref={_map} style={styles.map} maxZoomLevel={13}>
           {selectedGroup.participants.map((user) => (
-            <UserMarker user={user} />
+            <UserMarker
+              user={user}
+              onPress={onUserSelect}
+              isCurrentUser={user.id === selectedUserId}
+            />
           ))}
         </MapView>
       </View>
+      {selectedUser && <UserSelection user={selectedUser} />}
     </View>
   );
 };

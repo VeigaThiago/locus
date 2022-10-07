@@ -5,6 +5,7 @@ interface FriendScreenProps {}
 
 const FriendScreen = ({}: FriendScreenProps) => {
   const confirmedFriends = [
+    // TODO: Fetch
     {
       id: "1",
       name: "Mary Green",
