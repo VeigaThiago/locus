@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "locus-app",
+    "description": "Rastreador de amigos",
     "slug": "locus-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -22,6 +23,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.locus.locusapp",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -29,6 +31,11 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8bea0b53-2551-4d56-9982-7b7ea8ac11f0"
+      }
     }
   }
 }

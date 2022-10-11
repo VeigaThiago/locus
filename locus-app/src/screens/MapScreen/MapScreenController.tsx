@@ -1,4 +1,5 @@
-import { ReactElement, cloneElement, useMemo } from "react";
+import { ReactElement, cloneElement, useEffect, useState } from "react";
+import { GroupType } from "../../model/Group";
 import User from "../../model/User";
 
 type MapScreenControllerProps = {
@@ -10,9 +11,15 @@ const userId = "2";
 const user = new User(userId);
 
 const MapScreenController = ({ children }: MapScreenControllerProps) => {
-  const groups = user.getFormattedGroups();
+  const [groups, setGroups] = useState<GroupType[]>([]);
+  useEffect(() => {
+    const saveUserGroups = async () => {
+      const fGroups = await user.getFormattedGroups();
+      setGroups(fGroups);
+    };
+    saveUserGroups();
+  }, []);
 
-  console.log(groups);
   return cloneElement(children, {
     groups,
   });

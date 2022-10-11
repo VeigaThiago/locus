@@ -12,9 +12,12 @@ export const groups = {
         coords: {
           latitude: "-12.0",
           longitude: "-38.0",
-          batteryLevel: 0.5,
-          lastUpdate: new Date("2015-03-25"),
         },
+        battery: {
+          level: 0.5,
+          charging: false,
+        },
+        lastUpdate: new Date("2015-03-25"),
       },
       {
         id: "2",
@@ -23,9 +26,12 @@ export const groups = {
         coords: {
           latitude: "-11.0",
           longitude: "-39.0",
-          batteryLevel: 0.5,
-          lastUpdate: new Date("2015-03-25"),
         },
+        battery: {
+          level: 0.5,
+          charging: false,
+        },
+        lastUpdate: new Date("2015-03-25"),
       },
       {
         id: "3",
@@ -34,9 +40,12 @@ export const groups = {
         coords: {
           latitude: "-13.0",
           longitude: "-37.0",
-          batteryLevel: 0.1,
-          lastUpdate: new Date("2015-03-25"),
         },
+        battery: {
+          level: 0.5,
+          charging: false,
+        },
+        lastUpdate: new Date("2015-03-25"),
       },
       {
         id: "4",
@@ -45,9 +54,12 @@ export const groups = {
         coords: {
           latitude: "-11.0",
           longitude: "-33.0",
-          batteryLevel: 0.9,
-          lastUpdate: new Date("2015-03-25"),
         },
+        battery: {
+          level: 0.5,
+          charging: false,
+        },
+        lastUpdate: new Date("2015-03-25"),
       },
     ],
   },
@@ -62,9 +74,12 @@ export const groups = {
         coords: {
           latitude: "-11.0",
           longitude: "-39.0",
-          batteryLevel: 0.6,
-          lastUpdate: new Date("2015-03-25"),
         },
+        battery: {
+          level: 0.5,
+          charging: false,
+        },
+        lastUpdate: new Date("2015-03-25"),
       },
       {
         id: "5",
@@ -73,9 +88,12 @@ export const groups = {
         coords: {
           latitude: "-12.0",
           longitude: "-37.0",
-          batteryLevel: 0.3,
-          lastUpdate: new Date("2015-03-25"),
         },
+        battery: {
+          level: 0.5,
+          charging: false,
+        },
+        lastUpdate: new Date("2015-03-25"),
       },
     ],
   },

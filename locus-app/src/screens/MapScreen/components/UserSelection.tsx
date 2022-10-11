@@ -1,20 +1,15 @@
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
+import moment from "moment";
+import "moment/locale/pt-br";
+moment.locale("pt-br");
+
 import { Text, View, StyleSheet, Image } from "react-native";
+import { UserType } from "../../../model/User";
 import { colors, spacings, typography } from "../../../ui/tokens";
 import { convertPercentageToColor } from "../../../utils/color";
 
 interface UserSelectionProps {
-  user: {
-    id: string;
-    name: string;
-    photoUrl: string;
-    coords: {
-      latitude: string;
-      longitude: string;
-      batteryLevel: number;
-      lastUpdate: Date;
-    };
-  };
+  user: UserType;
 }
 
 const UserSelection = ({ user }: UserSelectionProps) => {
@@ -22,17 +17,22 @@ const UserSelection = ({ user }: UserSelectionProps) => {
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.leftContent}>
-          <Text style={styles.title}>{user.name}</Text>
-          <View style={styles.description}>
-            <Icon
-              size={30}
-              name="battery-charging-50"
-              color={convertPercentageToColor(user.coords.batteryLevel)}
-            />
-            <Text style={{ marginLeft: 5, fontSize: 17 }}>
-              {Math.floor(user.coords.batteryLevel * 100) + "%"}
-            </Text>
+          <View>
+            <Text style={styles.title}>{user.name}</Text>
+            <View style={styles.description}>
+              <Icon
+                size={30}
+                name={`battery${user.battery.charging ? "-charging" : ""}-50`}
+                color={convertPercentageToColor(user.battery.level)}
+              />
+              <Text style={{ marginLeft: 5, fontSize: 15 }}>
+                {Math.floor(user.battery.level * 100) + "%"}
+              </Text>
+            </View>
           </View>
+          <Text style={styles.updateText}>
+            Última atualização há {moment(user.lastUpdate).fromNow()}
+          </Text>
         </View>
         <Image source={{ uri: user.photoUrl }} style={styles.avatar} />
       </View>
@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
     borderRadius: spacings.x05,
     marginHorizontal: spacings.x2,
     marginBottom: spacings.x2,
-    paddingHorizontal: spacings.x4,
-    paddingVertical: spacings.x4,
+    paddingHorizontal: spacings.x3,
+    paddingVertical: spacings.x3,
   },
   leftContent: {
     justifyContent: "space-between",
@@ -71,6 +71,10 @@ const styles = StyleSheet.create({
   description: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  updateText: {
+    ...typography.p,
+    color: colors.gray,
   },
   avatar: {
     height: 70,

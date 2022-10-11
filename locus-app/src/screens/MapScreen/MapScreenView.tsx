@@ -83,7 +83,7 @@ const MapScreenView = ({ groups = [] }: MapScreenViewProps) => {
           onUserPress={onUserSelect}
         />
         <View style={{ top: 20 }}>
-          <MapView ref={_map} style={styles.map} maxZoomLevel={13}>
+          <MapView ref={_map} style={styles.map} maxZoomLevel={18}>
             {selectedGroup?.participants?.map((user) => (
               <UserMarker
                 user={user}

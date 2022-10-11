@@ -1,5 +1,20 @@
 import { Alert } from "react-native";
-import Group from "./Group";
+import Group, { GroupType } from "./Group";
+
+export type UserType = {
+  id: string;
+  name: string;
+  photoUrl: string;
+  coords: {
+    latitude: string;
+    longitude: string;
+  };
+  battery: {
+    level: number;
+    charging: boolean;
+  };
+  lastUpdate: Date;
+};
 
 class User {
   id: string = "";
@@ -15,7 +30,7 @@ class User {
       {
         id: "1",
         name: "Mary Green",
-        email: "mary@email.com",
+        email: "mary2@email.com",
         avatarUrl: "https://source.unsplash.com/50x50/?portrait",
       },
       {
@@ -64,21 +79,30 @@ class User {
     Alert.alert(`Convite de amizade rejeitado == ${fid}`);
   };
 
-  getGroups = () => {
+  getGroups = async () => {
     const userGroups = ["0001", "0002"];
-
-    return userGroups.map((gid) => Group.getGroup(gid));
+    const mapped = await Promise.all(
+      userGroups.map((gid) => Group.getGroup(gid))
+    );
+    return mapped;
   };
 
-  getFormattedGroups = () =>
-    this.getGroups().map((group) => {
-      const user = group.participants.find((user) => user.id === this.id);
-      const friends = group.participants.filter((user) => user.id !== this.id);
-      return {
-        ...group,
-        participants: [{ ...user, name: "Você" }, ...friends],
-      };
-    });
+  getFormattedGroups = async (): Promise<GroupType[]> => {
+    const userGroups = (await this.getGroups()) as GroupType[];
+    console.log(userGroups);
+    return userGroups
+      .filter((group) => group !== undefined)
+      .map((group) => {
+        const user = group.participants.find((user) => user.id === this.id);
+        const friends = group.participants.filter(
+          (user) => user.id !== this.id
+        );
+        return {
+          ...group,
+          participants: [{ ...(user as UserType), name: "Você" }, ...friends],
+        };
+      });
+  };
 }
 
 export default User;

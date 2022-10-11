@@ -1,6 +1,9 @@
 import { TextStyle } from "react-native";
 
 export default {
+  p: {
+    fontSize: 12,
+  } as TextStyle,
   pBold: {
     fontSize: 12,
     fontWeight: "700",

@@ -11,7 +11,7 @@ import {
 import { SimpleLineIcons as Icon } from "@expo/vector-icons";
 import { colors, spacings, typography } from "../../../../ui/tokens";
 import { Friend } from "./components";
-import logo from "../../../../assets/images/Logo.png";
+import GroupIcon from "../../../../assets/images/Group.png";
 
 interface GroupSelectorProps {
   name: string;
@@ -70,7 +70,7 @@ const GroupSelector = ({
         >
           <Friend
             title={"Todos"}
-            avatarSrc={logo}
+            avatarSrc={GroupIcon}
             onPress={() => onUserPress("")}
           />
           {participants.map((item) => (

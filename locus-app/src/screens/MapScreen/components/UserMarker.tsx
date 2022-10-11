@@ -1,19 +1,10 @@
 import { Image, StyleSheet } from "react-native";
 import { Marker } from "react-native-maps";
+import { UserType } from "../../../model/User";
 import { convertPercentageToColor } from "../../../utils/color";
 
 interface UserMarkerProps {
-  user: {
-    id: string;
-    name: string;
-    photoUrl: string;
-    coords: {
-      latitude: string;
-      longitude: string;
-      batteryLevel: number;
-      lastUpdate: Date;
-    };
-  };
+  user: UserType;
   onPress: (uid: string) => void;
   isCurrentUser: boolean;
 }
@@ -32,7 +23,7 @@ const UserMarker = ({ user, onPress, isCurrentUser }: UserMarkerProps) => (
       source={{ uri: user.photoUrl }}
       style={[
         styles.avatar,
-        { borderColor: convertPercentageToColor(user.coords.batteryLevel) },
+        { borderColor: convertPercentageToColor(user.battery.level) },
         isCurrentUser ? styles.selectedStyle : {},
       ]}
     />

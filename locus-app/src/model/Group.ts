@@ -1,19 +1,11 @@
-import { Alert } from "react-native";
 import { groups } from "../__fixtures__/groups";
+import Groups from "./Groups";
+import { UserType } from "./User";
 
 export type GroupType = {
   name: string;
-  participants: {
-    id: string;
-    name: string;
-    photoUrl: string;
-    coords: {
-      latitude: string;
-      longitude: string;
-      batteryLevel: number;
-      lastUpdate: Date;
-    };
-  }[];
+  id: string;
+  participants: UserType[];
 };
 
 class Group {
@@ -23,8 +15,9 @@ class Group {
     this.userId = id;
   }
 
-  static getGroup = (gid: string): GroupType => {
-    return groups[gid];
+  static getGroup = async (gid: string): Promise<GroupType | undefined> => {
+    const groups = await Groups.getGroups();
+    return groups?.[gid];
   };
 }
 
