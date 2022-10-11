@@ -11,6 +11,7 @@ interface UserMarkerProps {
 
 const UserMarker = ({ user, onPress, isCurrentUser }: UserMarkerProps) => (
   <Marker
+    tracksViewChanges
     identifier={user.id}
     coordinate={{
       latitude: parseFloat(user.coords.latitude),
@@ -24,7 +25,6 @@ const UserMarker = ({ user, onPress, isCurrentUser }: UserMarkerProps) => (
       style={[
         styles.avatar,
         { borderColor: convertPercentageToColor(user.battery.level) },
-        isCurrentUser ? styles.selectedStyle : {},
       ]}
     />
   </Marker>
@@ -37,11 +37,6 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 40 / 2,
-  },
-  selectedStyle: {
-    height: 46,
-    width: 46,
-    borderRadius: 46 / 2,
   },
 });
 

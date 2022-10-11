@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { View, StyleSheet, Dimensions, SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
 import { GroupType } from "../../model/Group";
-import { colors } from "../../ui/tokens";
+import { colors, spacings } from "../../ui/tokens";
 import { UserMarker, GroupSelector, UserSelection } from "./components";
 
 export interface MapScreenViewProps {
@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: colors.white,
     flex: 1,
+    paddingTop: spacings.x4,
   },
   container: {
     flex: 1,
