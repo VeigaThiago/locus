@@ -1,6 +1,7 @@
 import { StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { FriendList } from "../../components";
 import { colors } from "../../ui/tokens";
+import DefaultFab from "../../components/Fab/Fab";
 
 type FriendData = {
   id: string;
@@ -14,6 +15,7 @@ interface FriendScreenViewProps {
   pendingFriends?: FriendData[];
   onConfirmedFriendPress?: (fdi: string) => void;
   onPendingFriendPress?: (fdi: string) => void;
+  onAddNewFriendPress?: () => void;
 }
 
 const FriendScreenView = ({
@@ -21,6 +23,7 @@ const FriendScreenView = ({
   pendingFriends = [],
   onConfirmedFriendPress = () => {},
   onPendingFriendPress = () => {},
+  onAddNewFriendPress = () => {},
 }: FriendScreenViewProps) => {
   return (
     <SafeAreaView style={styles.container}>
@@ -36,6 +39,7 @@ const FriendScreenView = ({
           onItemPress={onPendingFriendPress}
         />
       </ScrollView>
+      <DefaultFab onPress={onAddNewFriendPress} />
     </SafeAreaView>
   );
 };

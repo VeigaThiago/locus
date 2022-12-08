@@ -21,4 +21,8 @@ export default {
     fontSize: 26,
     fontWeight: "600",
   } as TextStyle,
+  pageTitle: {
+    fontSize: 36,
+    fontWeight: "600",
+  } as TextStyle,
 };

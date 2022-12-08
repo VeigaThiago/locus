@@ -1,14 +1,18 @@
 import { ReactElement, cloneElement, useMemo } from "react";
 import { Alert } from "react-native";
+import { GroupFriendStackProps } from "../../../types";
 import User from "../../model/User";
 
 type FriendScreenControllerProps = {
   children: ReactElement;
-};
+} & GroupFriendStackProps<"Friend">;
 
 const user = new User("1");
 
-const FriendScreenController = ({ children }: FriendScreenControllerProps) => {
+const FriendScreenController = ({
+  children,
+  navigation,
+}: FriendScreenControllerProps) => {
   const confirmedFriends = useMemo(() => user.getConfirmedFriends(), [user]);
   const pendingFriends = useMemo(() => user.getPendingFriends(), [user]);
 
@@ -36,11 +40,14 @@ const FriendScreenController = ({ children }: FriendScreenControllerProps) => {
 
   const onConfirmedFriendPress = (fid: string) => {};
 
+  const onAddNewFriendPress = () => navigation.navigate("AddFriend");
+
   return cloneElement(children, {
     onConfirmedFriendPress,
     pendingFriends,
     confirmedFriends,
     onPendingFriendPress,
+    onAddNewFriendPress,
   });
 };
 

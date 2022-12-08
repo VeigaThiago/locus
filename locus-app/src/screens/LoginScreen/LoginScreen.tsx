@@ -1,10 +1,8 @@
-import { SafeAreaView } from "react-native";
 import { RootStackScreenProps } from "../../../types";
 import LoginScreenView from "./LoginScreenView";
-import styles from "./styles";
 
 const LoginScreen = ({ navigation }: RootStackScreenProps<"LoggedOut">) => {
-  const onFaceBookPress = () => navigation.navigate("Root");
+  const onFaceBookPress = () => navigation.navigate("LoggedIn");
 
   return <LoginScreenView onFacebookPress={onFaceBookPress} />;
 };

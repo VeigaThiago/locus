@@ -1,12 +1,10 @@
-import { Alert } from "react-native";
+import { GroupFriendStackProps } from "../../../types";
 import FriendScreenController from "./FriendScreenController";
 import FriendScreenView from "./FriendScreenView";
 
-interface FriendScreenProps {}
-
-const FriendScreen = ({}: FriendScreenProps) => {
+const FriendScreen = (props: GroupFriendStackProps<"Friend">) => {
   return (
-    <FriendScreenController>
+    <FriendScreenController {...props}>
       <FriendScreenView />
     </FriendScreenController>
   );

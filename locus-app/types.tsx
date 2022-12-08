@@ -8,6 +8,7 @@ import {
   CompositeScreenProps,
   NavigatorScreenParams,
 } from "@react-navigation/native";
+
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 declare global {
@@ -17,16 +18,24 @@ declare global {
 }
 
 export type RootStackParamList = {
-  Root: NavigatorScreenParams<RootTabParamList> | undefined;
+  LoggedIn: NavigatorScreenParams<LoggedInStackParamList> | undefined;
   LoggedOut: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, Screen>;
 
+export type LoggedInStackParamList = {
+  Root: NavigatorScreenParams<RootTabParamList> | undefined;
+  AddFriend: undefined;
+};
+
+export type LoggedInStackProps<Screen extends keyof LoggedInStackParamList> =
+  NativeStackScreenProps<LoggedInStackParamList, Screen>;
+
 export type RootTabParamList = {
   Profile: undefined;
-  GroupFriends: undefined;
+  GroupFriends: NavigatorScreenParams<GroupFriendParamList>;
   Map: undefined;
   Settings: undefined;
 };
@@ -37,7 +46,13 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
     NativeStackScreenProps<RootStackParamList>
   >;
 
-export type TopTabParamList = {
+export type GroupFriendParamList = {
   Group: undefined;
   Friend: undefined;
 };
+
+export type GroupFriendStackProps<Screen extends keyof GroupFriendParamList> =
+  CompositeScreenProps<
+    NativeStackScreenProps<LoggedInStackParamList>,
+    NativeStackScreenProps<GroupFriendParamList, Screen>
+  >;

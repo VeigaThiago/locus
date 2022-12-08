@@ -17,12 +17,21 @@ import * as React from "react";
 import { ColorSchemeName, View } from "react-native";
 
 import {
+  LoggedInStackParamList,
   RootStackParamList,
   RootTabParamList,
-  RootTabScreenProps,
-  TopTabParamList,
+  GroupFriendParamList,
 } from "../../types";
-import { LoginScreen, GroupScreen, FriendScreen, MapScreen } from "../screens";
+import { BackgroundTitle } from "../components";
+import FriendGroupBackground from "../assets/images/background/FriendAndGroup.png";
+
+import {
+  LoginScreen,
+  GroupScreen,
+  FriendScreen,
+  MapScreen,
+  AddFriendScreen,
+} from "../screens";
 import { colors } from "../ui/tokens";
 
 export default function Navigation({
@@ -50,24 +59,31 @@ function RootNavigator() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Root"
-        component={BottomTabNavigator}
+        name="LoggedIn"
+        component={LoggedInStackNavigator}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
 }
 
-const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
+const TopTab = createMaterialTopTabNavigator<GroupFriendParamList>();
 
 function GroupFriendsTabs() {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1 }} />
+      <BackgroundTitle
+        backgroundSrc={FriendGroupBackground}
+        title={"Grupos & Amigos"}
+      />
       <TopTab.Navigator
         screenOptions={{
           tabBarActiveTintColor: colors.primary,
           tabBarInactiveTintColor: colors.gray,
+          tabBarContentContainerStyle: {
+            borderTopWidth: 1,
+            borderTopColor: "rgba(0,0,0,0.1)",
+          },
           tabBarLabelStyle: { fontWeight: "600" },
         }}
       >
@@ -83,6 +99,34 @@ function GroupFriendsTabs() {
         />
       </TopTab.Navigator>
     </View>
+  );
+}
+
+const LoggedInStack = createNativeStackNavigator<LoggedInStackParamList>();
+
+function LoggedInStackNavigator() {
+  return (
+    <LoggedInStack.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false,
+        headerTitleAlign: "left",
+        headerTintColor: colors.primary,
+        headerLargeTitle: true,
+      }}
+    >
+      <LoggedInStack.Screen
+        name="Root"
+        component={BottomTabNavigator}
+        options={{ headerShown: false }}
+      />
+      <LoggedInStack.Screen
+        name="AddFriend"
+        component={AddFriendScreen}
+        options={{
+          title: "Adicionar amigo",
+        }}
+      />
+    </LoggedInStack.Navigator>
   );
 }
 
