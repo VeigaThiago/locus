@@ -4,16 +4,8 @@ import Group, { GroupType } from "./Group";
 export type UserType = {
   id: string;
   name: string;
-  photoUrl: string;
-  coords: {
-    latitude: string;
-    longitude: string;
-  };
-  battery: {
-    level: number;
-    charging: boolean;
-  };
-  lastUpdate: Date;
+  email: string;
+  avatarUrl: string;
 };
 
 class User {
@@ -89,7 +81,6 @@ class User {
 
   getFormattedGroups = async (): Promise<GroupType[]> => {
     const userGroups = (await this.getGroups()) as GroupType[];
-    console.log(userGroups);
     return userGroups
       .filter((group) => group !== undefined)
       .map((group) => {

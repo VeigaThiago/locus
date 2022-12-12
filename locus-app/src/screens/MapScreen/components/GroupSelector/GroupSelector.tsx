@@ -17,7 +17,7 @@ interface GroupSelectorProps {
   name: string;
   onLeftPress?: () => void;
   onRightPress?: () => void;
-  participants: { id: string; name: string; photoUrl: string }[];
+  participants: { id: string; name: string; avatarUrl: string }[];
   onUserPress?: (uid: string) => void;
 }
 
@@ -76,7 +76,7 @@ const GroupSelector = ({
           {participants.map((item) => (
             <Friend
               title={item.name.split(" ")[0]}
-              avatarSrc={{ uri: item.photoUrl }}
+              avatarSrc={{ uri: item.avatarUrl }}
               onPress={() => onUserPress(item.id)}
             />
           ))}

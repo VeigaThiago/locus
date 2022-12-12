@@ -1,11 +1,12 @@
 import * as React from "react";
 import { Text, View, StyleSheet, FlatList, Alert } from "react-native";
+import { UserType } from "../../model/User";
 import { colors, spacings } from "../../ui/tokens";
 import FriendItem from "../FriendItem";
 
 interface FriendListProps {
   title?: string;
-  data?: { id: string; name: string; email: string; avatarUrl: string }[];
+  data?: UserType[];
   onItemPress?: (id: string) => void;
 }
 
