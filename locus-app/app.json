@@ -20,7 +20,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.locus.locusapp"
     },
     "android": {
       "package": "com.locus.locusapp",

@@ -22,7 +22,7 @@ const AddFriendScreenController = ({
   const [hasSearchError, setHasSearchError] = useState<boolean>(false);
 
   const searchFriend = async (searchTerm: string) => {
-    const findUsers = await Users.getUsers(searchTerm);
+    const findUsers = await Users.fetchUsers(searchTerm);
     if (findUsers && findUsers.length) {
       setUsers(findUsers);
     } else {
