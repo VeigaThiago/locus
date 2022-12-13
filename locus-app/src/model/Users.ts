@@ -1,4 +1,6 @@
-import { fetchUsers } from "../services/users";
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { createUser, fetchUsers } from "../services/users";
+import { UserType } from "./User";
 
 let instance: Users;
 
@@ -10,6 +12,8 @@ class Users {
     console.log(users);
     return users;
   };
+
+  createUser = async (user: FirebaseAuthTypes.User) => createUser(user);
 
   static getInstance = () => {
     if (instance) return instance;

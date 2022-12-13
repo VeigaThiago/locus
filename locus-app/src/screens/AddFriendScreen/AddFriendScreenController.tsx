@@ -19,6 +19,7 @@ const AddFriendScreenController = ({
   const searchFriend = async (searchTerm: string) => {
     const findUsers = await Users.fetchUsers(searchTerm);
     if (findUsers && findUsers.length) {
+      //TODO: Filter friends and yourself
       setUsers(findUsers);
     } else {
       setHasSearchError(true);
