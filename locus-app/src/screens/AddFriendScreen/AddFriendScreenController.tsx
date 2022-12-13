@@ -1,11 +1,6 @@
-import {
-  ReactElement,
-  cloneElement,
-  useMemo,
-  useState,
-  useEffect,
-} from "react";
+import { ReactElement, cloneElement, useState } from "react";
 import { Alert } from "react-native";
+
 import { LoggedInStackProps } from "../../../types";
 import { UserType } from "../../model/User";
 import Users from "../../model/Users";
@@ -30,10 +25,28 @@ const AddFriendScreenController = ({
     }
   };
 
+  const addFriend = (user: UserType) => {
+    Alert.alert(
+      "Adicionar como amigo",
+      `Deseja adicionar ${user.name} como amigo?`,
+      [
+        {
+          text: "Sim",
+          style: "default",
+          onPress: () => {
+            //TODO:
+          },
+        },
+        { text: "Cancelar", style: "cancel" },
+      ]
+    );
+  };
+
   return cloneElement(children, {
     searchFriend,
     users,
     hasSearchError,
+    addFriend,
   });
 };
 

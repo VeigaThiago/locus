@@ -21,7 +21,7 @@ const UserMarker = ({ user, onPress, isCurrentUser }: UserMarkerProps) => (
     onPress={() => onPress(user.id)}
   >
     <Image
-      source={{ uri: user.photoUrl }}
+      source={{ uri: user.avatarUrl }}
       style={[
         styles.avatar,
         { borderColor: convertPercentageToColor(user.battery.level) },

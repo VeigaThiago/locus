@@ -10,12 +10,14 @@ interface AddFriendScreenViewProps {
   searchFriend?: (searchTerm: string) => void;
   users?: UserType[];
   hasSearchError?: boolean;
+  addFriend?: (user: UserType) => void;
 }
 
 const AddFriendScreenView = ({
   searchFriend = () => {},
   users = [],
   hasSearchError = false,
+  addFriend = () => {},
 }: AddFriendScreenViewProps) => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -23,6 +25,8 @@ const AddFriendScreenView = ({
     () => searchFriend(searchTerm),
     [searchTerm]
   );
+
+  const onAddFriendPress = useCallback((user: UserType) => addFriend(user), []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -46,14 +50,23 @@ const AddFriendScreenView = ({
         />
         <FlatList
           data={users}
-          renderItem={({ item: { email, name, avatarUrl } }) => (
-            <FriendItem
-              key={email}
-              title={name}
-              description={email}
-              avatarSrc={{ uri: avatarUrl }}
-            />
-          )}
+          renderItem={({ item }) => {
+            const { id, email, name, avatarUrl } = item;
+            return (
+              <FriendItem
+                key={email}
+                title={name}
+                avatarSrc={{ uri: avatarUrl }}
+                rightContent={{
+                  icon: {
+                    onPress: () => onAddFriendPress(item),
+                    name: "plus",
+                    color: colors.primary,
+                  },
+                }}
+              />
+            );
+          }}
         />
       </View>
     </SafeAreaView>
