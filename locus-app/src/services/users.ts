@@ -1,22 +1,45 @@
 import { UserType } from "../model/User";
 
-const GET_USERS_URL = `https://6397758786d04c7633962b07.mockapi.io/users`;
 import firestore from "@react-native-firebase/firestore";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
-export const fetchUsersMock = async (term?: string): Promise<UserType[]> => {
-  return fetch(GET_USERS_URL, {
-    method: "GET",
-  }).then((response) => response.json());
+type UserModel = {
+  avatarUrl: string;
+  name: string;
+  email: string;
 };
 
-export const fetchUsers = async (term?: string): Promise<UserType[]> => {
+export const fetchUsers = async (term?: string): Promise<UserModel[]> => {
   const users = await firestore()
     .collection<UserType>("users")
     .where("name", ">=", term)
     .where("name", "<=", term + "\uf8ff")
     .get();
-  return users.docs.map((doc) => doc.data());
+  return users.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+};
+
+export const getUser = async (userId: string): Promise<any> => {
+  const user = await firestore()
+    .collection<UserType>("users")
+    .doc(userId)
+    .get();
+  const enrichedUser = await appendUserData({ ...user.data(), id: user.id });
+  return enrichedUser;
+};
+
+const appendUserData = async (user: {
+  id: string;
+  name?: string | undefined;
+  email?: string | undefined;
+  avatarUrl?: string | undefined;
+}) => {
+  const [location, battery] = await Promise.all([
+    await firestore().collection("customerLocation").doc(user.id).get(),
+    await firestore().collection("batteryStatus").doc(user.id).get(),
+  ]);
+  console.log(location);
+
+  return { ...user, ...location.data(), battery: battery.data() };
 };
 
 export const createUser = async (userData: FirebaseAuthTypes.User) => {
@@ -25,4 +48,27 @@ export const createUser = async (userData: FirebaseAuthTypes.User) => {
     email: userData.email,
     avatarUrl: userData.photoURL,
   });
+};
+
+const allUserGroups = (userId: string) =>
+  firestore().collection("groupsRequest").doc(userId).collection("status");
+
+export const getUserPendingGroupsIds = async (
+  userId: string
+): Promise<string[]> => {
+  const pendingGroups = await allUserGroups(userId)
+    .where("pending", "==", true)
+    .where("confirmed", "==", false)
+    .get();
+  return pendingGroups.docs.map((doc) => doc.id);
+};
+
+export const getUserConfirmedGroupsIds = async (
+  userId: string
+): Promise<string[]> => {
+  const confirmedGroups = await allUserGroups(userId)
+    .where("pending", "==", false)
+    .where("confirmed", "==", true)
+    .get();
+  return confirmedGroups.docs.map((doc) => doc.id);
 };

@@ -3,13 +3,11 @@ import { LoginManager, AccessToken } from "react-native-fbsdk";
 
 export async function facebookLogin() {
   // Attempt login with permissions
-  console.log("Called");
   const result = await LoginManager.logInWithPermissions([
     "public_profile",
     "email",
   ]);
 
-  console.log(result);
   if (result.isCancelled) {
     throw "User cancelled the login process";
   }
@@ -28,7 +26,7 @@ export async function facebookLogin() {
 
   await auth().signInWithCredential(facebookCredential);
   const currentUser = auth().currentUser;
-  console.log(currentUser);
   // Sign-in the user with the credential
+  console.log(currentUser);
   return currentUser;
 }

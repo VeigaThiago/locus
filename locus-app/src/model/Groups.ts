@@ -1,4 +1,5 @@
-import { fetchGroups } from "../services/groups";
+import { fetchGroup } from "../services/groups";
+import { getUser } from "../services/users";
 import { GroupType } from "./Group";
 
 let instance: Groups;
@@ -6,21 +7,17 @@ let instance: Groups;
 class Groups {
   instance: Groups | undefined = undefined;
 
-  groups: { [gid: string]: GroupType } | undefined = undefined;
+  getGroup = async (gid: string) => {
+    const group = await fetchGroup(gid);
 
-  getGroups = async () => {
-    if (this.groups) return this.groups;
-    else {
-      await this.fetchGroups();
-      return this.groups;
-    }
-  };
+    const participants = await Promise.all(
+      group.participants.map((uid) => getUser(uid))
+    );
 
-  fetchGroups = async () => {
-    const fGroups = await fetchGroups();
-    this.groups = fGroups.reduce((acc, group) => {
-      return { ...acc, [group.id]: group };
-    }, {});
+    return {
+      ...group,
+      participants,
+    };
   };
 
   static getInstance = () => {

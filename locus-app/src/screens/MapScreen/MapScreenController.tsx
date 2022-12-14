@@ -6,15 +6,11 @@ type MapScreenControllerProps = {
   children: ReactElement;
 };
 
-const userId = "2";
-
-const user = new User(userId);
-
 const MapScreenController = ({ children }: MapScreenControllerProps) => {
   const [groups, setGroups] = useState<GroupType[]>([]);
   useEffect(() => {
     const saveUserGroups = async () => {
-      const fGroups = await user.getFormattedGroups();
+      const fGroups = await User.getFormattedConfirmedGroups();
       setGroups(fGroups);
     };
     saveUserGroups();

@@ -1,5 +1,11 @@
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { Alert } from "react-native";
+import { getUserConfirmedGroupsIds } from "../services/users";
 import Group, { GroupType } from "./Group";
+import Groups from "./Groups";
+import Users from "./Users";
+
+let instance: User;
 
 export type UserType = {
   id: string;
@@ -9,11 +15,18 @@ export type UserType = {
 };
 
 class User {
-  id: string = "";
+  id: string | undefined;
+  avatarUrl: string | null | undefined;
+  name: string | null | undefined;
+  email: string | null | undefined;
 
-  constructor(id: string) {
-    this.id = id;
-  }
+  login = (user: FirebaseAuthTypes.User) => {
+    this.id = user.uid;
+    this.avatarUrl = user?.photoURL;
+    this.name = user.displayName;
+    this.email = user.email;
+    Users.createUser(user);
+  };
 
   getFriends = () => {};
 
@@ -71,16 +84,19 @@ class User {
     Alert.alert(`Convite de amizade rejeitado == ${fid}`);
   };
 
-  getGroups = async () => {
-    const userGroups = ["0001", "0002"];
+  getConfirmedGroups = async () => {
+    const confirmedGroupIds = await getUserConfirmedGroupsIds(this.id || "");
+
     const mapped = await Promise.all(
-      userGroups.map((gid) => Group.getGroup(gid))
+      confirmedGroupIds.map((gid) => Group.getGroup(gid))
     );
     return mapped;
   };
 
-  getFormattedGroups = async (): Promise<GroupType[]> => {
-    const userGroups = (await this.getGroups()) as GroupType[];
+  getPendingGroups = () => {};
+
+  getFormattedConfirmedGroups = async (): Promise<GroupType[]> => {
+    const userGroups = await this.getConfirmedGroups();
     return userGroups
       .filter((group) => group !== undefined)
       .map((group) => {
@@ -94,6 +110,14 @@ class User {
         };
       });
   };
+
+  static getInstance = () => {
+    if (instance) return instance;
+    else {
+      instance = new User();
+      return instance;
+    }
+  };
 }
 
-export default User;
+export default User.getInstance();

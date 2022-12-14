@@ -3,16 +3,18 @@ import { Alert } from "react-native";
 import { GroupFriendStackProps } from "../../../types";
 import User from "../../model/User";
 
-type FriendScreenControllerProps = {
+type GroupScreenControllerProps = {
   children: ReactElement;
 } & GroupFriendStackProps<"Friend">;
 
-const FriendScreenController = ({
+const user = new User("1");
+
+const GroupScreenController = ({
   children,
   navigation,
-}: FriendScreenControllerProps) => {
-  const confirmedFriends = useMemo(() => User.getConfirmedFriends(), [User]);
-  const pendingFriends = useMemo(() => User.getPendingFriends(), [User]);
+}: GroupScreenControllerProps) => {
+  const confirmedFriends = useMemo(() => user.getConfirmedFriends(), [user]);
+  const pendingFriends = useMemo(() => user.getPendingFriends(), [user]);
 
   const onPendingFriendPress = (fid: string) => {
     Alert.alert(
@@ -25,12 +27,12 @@ const FriendScreenController = ({
         {
           text: "Aceitar",
           style: "default",
-          onPress: () => User.confirmFriend(fid),
+          onPress: () => user.confirmFriend(fid),
         },
         {
           text: "Rejeitar",
           style: "destructive",
-          onPress: () => User.rejectFriend(fid),
+          onPress: () => user.rejectFriend(fid),
         },
       ]
     );
@@ -49,4 +51,4 @@ const FriendScreenController = ({
   });
 };
 
-export default FriendScreenController;
+export default GroupScreenController;

@@ -1,4 +1,3 @@
-import { groups } from "../__fixtures__/groups";
 import Groups from "./Groups";
 import { UserType } from "./User";
 
@@ -15,9 +14,9 @@ class Group {
     this.userId = id;
   }
 
-  static getGroup = async (gid: string): Promise<GroupType | undefined> => {
-    const groups = await Groups.getGroups();
-    return groups?.[gid];
+  static getGroup = async (gid: string) => {
+    const group = await Groups.getGroup(gid);
+    return group;
   };
 }
 
