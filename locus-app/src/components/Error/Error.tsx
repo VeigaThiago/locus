@@ -29,5 +29,6 @@ const styles = StyleSheet.create({
     ...typography.title,
     color: colors.primary,
     marginHorizontal: spacings.x3,
+    textAlign: "center",
   },
 });

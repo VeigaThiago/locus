@@ -4,8 +4,7 @@ import User, { UserType } from "../../../model/User";
 import NewGroupBackground from "../../../assets/images/background/NewGroup.png";
 import { colors } from "../../../ui/tokens";
 import { Friend } from "../../MapScreen/components/GroupSelector/components";
-import Error from "../../../components/Error";
-import { FriendItem } from "../../../components";
+import { FriendItem, Error } from "../../../components";
 import { CheckBox } from "@rneui/base";
 import DefaultFab from "../../../components/Fab/Fab";
 

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { View, StyleSheet, Dimensions, SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
-import Error from "../../components/Error";
+import { Error } from "../../components";
 import { GroupType } from "../../model/Group";
 import { colors, spacings } from "../../ui/tokens";
 import { UserMarker, GroupSelector, UserSelection } from "./components";

@@ -4,7 +4,7 @@ import { colors, spacings } from "../../ui/tokens";
 import { AntDesign as Icon } from "@expo/vector-icons";
 import { useCallback, useState } from "react";
 import { UserType } from "../../model/User";
-import { FriendItem } from "../../components";
+import { FriendItem, Error } from "../../components";
 
 interface AddFriendScreenViewProps {
   searchFriend?: (searchTerm: string) => void;
@@ -49,6 +49,11 @@ const AddFriendScreenView = ({
           )}
         />
         <FlatList
+          ListEmptyComponent={
+            hasSearchError ? (
+              <Error description="Usuário não encontrado" />
+            ) : null
+          }
           data={users}
           renderItem={({ item }) => {
             const { id, email, name, avatarUrl } = item;
