@@ -49,7 +49,7 @@ export const createUser = async (userData: FirebaseAuthTypes.User) => {
   });
 };
 
-const allUserGroups = (userId: string) =>
+export const allUserGroups = (userId: string) =>
   firestore().collection("groupsRequest").doc(userId).collection("status");
 
 export const getUserPendingGroupsIds = async (
@@ -93,4 +93,46 @@ export const getUserConfirmedFriendsIds = async (
     .where("confirmed", "==", true)
     .get();
   return confirmedGroups.docs.map((doc) => doc.id);
+};
+
+const userFriendRelation = (uid: string, fid: string) =>
+  firestore().collection("friends").doc(uid).collection("status").doc(fid);
+
+const friendUserRelation = (uid: string, fid: string) =>
+  firestore().collection("friends").doc(fid).collection("status").doc(uid);
+
+export const sendFriendRequest = async (uid: string, fid: string) => {
+  await Promise.all([
+    userFriendRelation(uid, fid).update({
+      confirmed: true,
+      pending: true,
+    }),
+    friendUserRelation(uid, fid).update({
+      confirmed: false,
+      pending: true,
+    }),
+  ]);
+};
+
+export const removeFriend = async (uid: string, fid: string) => {
+  await Promise.all([
+    userFriendRelation(uid, fid).delete(),
+    friendUserRelation(uid, fid).delete(),
+  ]);
+};
+
+export const acceptFriendRequest = async (uid: string, fid: string) => {
+  await Promise.all([
+    userFriendRelation(uid, fid).update({
+      confirmed: true,
+      pending: false,
+    }),
+    friendUserRelation(uid, fid).update({
+      pending: false,
+    }),
+  ]);
+};
+
+export const rejectFriendRequest = async (uid: string, fid: string) => {
+  return removeFriend(uid, fid);
 };

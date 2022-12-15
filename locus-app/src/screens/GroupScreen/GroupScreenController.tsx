@@ -1,5 +1,4 @@
 import { ReactElement, cloneElement, useState, useEffect } from "react";
-import { Alert } from "react-native";
 import { GroupFriendStackProps } from "../../../types";
 import { GroupType } from "../../model/Group";
 import User from "../../model/User";
@@ -19,16 +18,20 @@ const GroupScreenController = ({
     confirmedGroups: [],
     pendingGroups: [],
   });
+  const fetchGroups = async () => {
+    const [confirmedGroups, pendingGroups] = await Promise.all([
+      User.getConfirmedGroups(),
+      User.getPendingGroups(),
+    ]);
+    setGroups({ confirmedGroups, pendingGroups });
+  };
+
+  // navigation.addListener("focus", () => {
+  //   fetchGroups();
+  // });
 
   useEffect(() => {
-    const fetchFriends = async () => {
-      const [confirmedGroups, pendingGroups] = await Promise.all([
-        User.getConfirmedGroups(),
-        User.getPendingGroups(),
-      ]);
-      setGroups({ confirmedGroups, pendingGroups });
-    };
-    fetchFriends();
+    fetchGroups();
   }, []);
 
   const onCreateNewGroupPress = () =>

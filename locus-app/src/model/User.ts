@@ -1,13 +1,15 @@
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import { Alert } from "react-native";
 import {
+  acceptFriendRequest,
   getUserConfirmedFriendsIds,
   getUserConfirmedGroupsIds,
   getUserPendingFriendsIds,
   getUserPendingGroupsIds,
+  rejectFriendRequest,
+  removeFriend,
+  sendFriendRequest,
 } from "../services/users";
 import Group, { GroupType } from "./Group";
-import Groups from "./Groups";
 import Users from "./Users";
 
 let instance: User;
@@ -71,12 +73,28 @@ class User {
     return mapped;
   };
 
-  confirmFriend = (fid: string) => {
-    Alert.alert(`Convite de amizade aceito == ${fid}`);
+  confirmFriend = async (fid: string) => {
+    if (this.id) {
+      await acceptFriendRequest(this.id, fid);
+    }
   };
 
-  rejectFriend = (fid: string) => {
-    Alert.alert(`Convite de amizade rejeitado == ${fid}`);
+  rejectFriend = async (fid: string) => {
+    if (this.id) {
+      await rejectFriendRequest(this.id, fid);
+    }
+  };
+
+  addFriend = async (fid: string) => {
+    if (this.id) {
+      await sendFriendRequest(this.id, fid);
+    }
+  };
+
+  removeFriend = async (fid: string) => {
+    if (this.id) {
+      await removeFriend(this.id, fid);
+    }
   };
 
   getConfirmedGroups = async () => {

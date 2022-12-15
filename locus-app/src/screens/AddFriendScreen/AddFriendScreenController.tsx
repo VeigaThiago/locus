@@ -45,7 +45,12 @@ const AddFriendScreenController = ({
           text: "Sim",
           style: "default",
           onPress: () => {
-            //TODO:
+            User.addFriend(user.id).then(() =>
+              navigation.navigate("Root", {
+                screen: "GroupFriends",
+                params: { screen: "Group" },
+              })
+            );
           },
         },
         { text: "Cancelar", style: "cancel" },

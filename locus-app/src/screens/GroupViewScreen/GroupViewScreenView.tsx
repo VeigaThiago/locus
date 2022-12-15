@@ -18,11 +18,10 @@ interface GroupViewScreenViewProps {
 
 const renderPendingItems =
   (ownerId: string) =>
-  ({ id, name, email, avatarUrl }: UserType) =>
+  ({ id, name, avatarUrl }: UserType) =>
     (
-      <View style={styles.itemContainer}>
+      <View key={id} style={styles.itemContainer}>
         <FriendItem
-          key={email}
           title={name}
           rightContent={{ rightDescription: ownerId === id ? "Adm" : "" }}
           avatarSrc={{ uri: avatarUrl }}
@@ -32,11 +31,10 @@ const renderPendingItems =
 
 const renderConfirmedItems =
   (ownerId: string) =>
-  ({ name, email, avatarUrl, battery }: UserType) =>
+  ({ id, name, avatarUrl, battery }: UserType) =>
     (
-      <View style={styles.itemContainer}>
+      <View key={id} style={styles.itemContainer}>
         <FriendItem
-          key={email}
           title={name}
           rightContent={{
             rightDescription: Math.floor((battery?.level || 0) * 100) + "%",

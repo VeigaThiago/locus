@@ -8,15 +8,20 @@ type MapScreenControllerProps = {
 
 const MapScreenController = ({ children }: MapScreenControllerProps) => {
   const [groups, setGroups] = useState<GroupType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const getGroups = async () => {
+    const fGroups = await User.getFormattedConfirmedGroups();
+    setGroups(fGroups);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const saveUserGroups = async () => {
-      const fGroups = await User.getFormattedConfirmedGroups();
-      setGroups(fGroups);
-    };
-    saveUserGroups();
+    getGroups();
   }, []);
 
   return cloneElement(children, {
+    loading,
     groups,
   });
 };

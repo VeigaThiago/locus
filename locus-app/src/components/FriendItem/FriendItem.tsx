@@ -28,6 +28,7 @@ interface FriendItemProps {
     };
   };
   onPress?: PressableProps["onPress"];
+  leftContent?: React.ReactNode;
 }
 
 const FriendItem = ({
@@ -43,11 +44,13 @@ const FriendItem = ({
     } = {},
   } = {},
   onPress = () => {},
+  leftContent,
 }: FriendItemProps) => {
   const Icon =
     iconType === "material-community" ? MaterialCommunityIcons : FontAwesome;
   return (
     <Pressable onPress={onPress} style={styles.container}>
+      {leftContent}
       <Image source={avatarSrc} style={styles.avatar} />
       <View style={styles.content}>
         <Text style={styles.title}>{title}</Text>

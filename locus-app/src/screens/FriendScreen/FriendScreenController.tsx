@@ -25,14 +25,15 @@ const FriendScreenController = ({
     pendingFriends: [],
   });
 
+  const fetchFriends = async () => {
+    const [confirmedFriends, pendingFriends] = await Promise.all([
+      User.getConfirmedFriends(),
+      User.getPendingFriends(),
+    ]);
+    setFriends({ confirmedFriends, pendingFriends });
+  };
+
   useEffect(() => {
-    const fetchFriends = async () => {
-      const [confirmedFriends, pendingFriends] = await Promise.all([
-        User.getConfirmedFriends(),
-        User.getPendingFriends(),
-      ]);
-      setFriends({ confirmedFriends, pendingFriends });
-    };
     fetchFriends();
   }, []);
 
@@ -47,18 +48,33 @@ const FriendScreenController = ({
         {
           text: "Aceitar",
           style: "default",
-          onPress: () => User.confirmFriend(fid),
+          onPress: () => User.confirmFriend(fid).then(() => fetchFriends()),
         },
         {
           text: "Rejeitar",
           style: "destructive",
-          onPress: () => User.rejectFriend(fid),
+          onPress: () => User.rejectFriend(fid).then(() => fetchFriends()),
         },
       ]
     );
   };
 
-  const onConfirmedFriendPress = (fid: string) => {};
+  const onConfirmedFriendPress = (fid: string) => {
+    Alert.alert(
+      "Remover amigo",
+      `Deseja remover ${
+        friends.pendingFriends.find(({ id }) => (id = fid))?.name
+      } da sua lista de amigos? Vocês não poderão mais adicionar um no grupo do outro.`,
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Remover",
+          style: "destructive",
+          onPress: () => User.removeFriend(fid).then(() => fetchFriends()),
+        },
+      ]
+    );
+  };
 
   const onAddNewFriendPress = () => navigation.navigate("AddFriend");
 

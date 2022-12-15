@@ -11,6 +11,7 @@ import {
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { GroupType } from "./src/model/Group";
+import { UserType } from "./src/model/User";
 
 declare global {
   namespace ReactNavigation {
@@ -30,6 +31,9 @@ export type LoggedInStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   AddFriend: undefined;
   NewGroupParticipants: undefined;
+  NewGroupName: {
+    participants: UserType[];
+  };
   GroupView: {
     group: GroupType;
     status: "pending" | "confirmed";
