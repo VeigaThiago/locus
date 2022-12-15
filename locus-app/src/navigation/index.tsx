@@ -35,6 +35,7 @@ import {
   NewGroupNameScreen,
   GroupViewScreen,
   SettingsScreen,
+  ProfileScreen,
 } from "../screens";
 import { colors } from "../ui/tokens";
 
@@ -166,8 +167,9 @@ function BottomTabNavigator() {
     >
       <BottomTab.Screen
         name="Profile"
-        component={GroupScreen}
+        component={ProfileScreen}
         options={() => ({
+          headerShown: false,
           title: "Perfil",
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         })}

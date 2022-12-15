@@ -8,6 +8,7 @@ import {
   rejectFriendRequest,
   removeFriend,
   sendFriendRequest,
+  updateUser,
 } from "../services/users";
 import Group, { GroupType } from "./Group";
 import Users from "./Users";
@@ -128,6 +129,16 @@ class User {
           participants: [{ ...(user as UserType), name: "Você" }, ...friends],
         };
       });
+  };
+
+  update = async ({ name, email }: { name: string; email: string }) => {
+    if (this.id) {
+      await updateUser({ id: this.id, name, email });
+      this.name = name;
+      this.email = email;
+
+      return true;
+    }
   };
 
   logout = () => {

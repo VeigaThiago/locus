@@ -49,6 +49,22 @@ export const createUser = async (userData: FirebaseAuthTypes.User) => {
   });
 };
 
+export const updateUser = async ({
+  id,
+  ...props
+}: {
+  id: string;
+  name?: string;
+  email?: string;
+}) => {
+  return firestore()
+    .collection("users")
+    .doc(id)
+    .update({
+      ...props,
+    });
+};
+
 export const allUserGroups = (userId: string) =>
   firestore().collection("groupsRequest").doc(userId).collection("status");
 

@@ -2,7 +2,7 @@ export default {
   white: "#ffffff",
   gray: "#828282",
   grayLight: "#979797",
-  grayLighter: "D1D1D1",
+  grayLighter: "#D1D1D1",
   black: "#000000",
 
   primary: "#2393F9",
