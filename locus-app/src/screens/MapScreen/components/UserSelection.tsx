@@ -22,19 +22,19 @@ const UserSelection = ({ user }: UserSelectionProps) => {
             <View style={styles.description}>
               <Icon
                 size={30}
-                name={`battery${user.battery.charging ? "-charging" : ""}-50`}
-                color={convertPercentageToColor(user.battery.level)}
+                name={`battery${user?.battery?.charging ? "-charging" : ""}-50`}
+                color={convertPercentageToColor(user?.battery?.level || 0)}
               />
               <Text style={{ marginLeft: 5, fontSize: 15 }}>
-                {Math.floor(user.battery.level * 100) + "%"}
+                {Math.floor((user?.battery?.level || 0) * 100) + "%"}
               </Text>
             </View>
           </View>
           <Text style={styles.updateText}>
-            Última atualização há {moment(user.lastUpdate).fromNow()}
+            Última atualização {moment(user.lastUpdate).fromNow()}
           </Text>
         </View>
-        <Image source={{ uri: user.photoUrl }} style={styles.avatar} />
+        <Image source={{ uri: user.avatarUrl }} style={styles.avatar} />
       </View>
     </View>
   );

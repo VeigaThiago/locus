@@ -1,7 +1,13 @@
-import { ReactElement, cloneElement, useMemo } from "react";
+import {
+  ReactElement,
+  cloneElement,
+  useMemo,
+  useState,
+  useEffect,
+} from "react";
 import { Alert } from "react-native";
 import { GroupFriendStackProps } from "../../../types";
-import User from "../../model/User";
+import User, { UserType } from "../../model/User";
 
 type FriendScreenControllerProps = {
   children: ReactElement;
@@ -11,14 +17,30 @@ const FriendScreenController = ({
   children,
   navigation,
 }: FriendScreenControllerProps) => {
-  const confirmedFriends = useMemo(() => User.getConfirmedFriends(), [User]);
-  const pendingFriends = useMemo(() => User.getPendingFriends(), [User]);
+  const [friends, setFriends] = useState<{
+    confirmedFriends: UserType[];
+    pendingFriends: UserType[];
+  }>({
+    confirmedFriends: [],
+    pendingFriends: [],
+  });
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      const [confirmedFriends, pendingFriends] = await Promise.all([
+        User.getConfirmedFriends(),
+        User.getPendingFriends(),
+      ]);
+      setFriends({ confirmedFriends, pendingFriends });
+    };
+    fetchFriends();
+  }, []);
 
   const onPendingFriendPress = (fid: string) => {
     Alert.alert(
       "Aceitar amizade?",
       `Deseja aceitar o convite de amizade de ${
-        pendingFriends.find(({ id }) => (id = fid))?.name
+        friends.pendingFriends.find(({ id }) => (id = fid))?.name
       }? Ele poderá lhe convidar para participar de grupos.`,
       [
         { text: "Cancelar", style: "cancel" },
@@ -42,8 +64,8 @@ const FriendScreenController = ({
 
   return cloneElement(children, {
     onConfirmedFriendPress,
-    pendingFriends,
-    confirmedFriends,
+    pendingFriends: friends.pendingFriends,
+    confirmedFriends: friends.confirmedFriends,
     onPendingFriendPress,
     onAddNewFriendPress,
   });

@@ -1,22 +1,29 @@
 import Groups from "./Groups";
-import { UserType } from "./User";
+import User, { UserType } from "./User";
 
 export type GroupType = {
   name: string;
   id: string;
   participants: UserType[];
+  owner?: UserType;
 };
 
 class Group {
-  userId: string = "";
-
-  constructor(id: string) {
-    this.userId = id;
-  }
-
   static getGroup = async (gid: string) => {
     const group = await Groups.getGroup(gid);
     return group;
+  };
+
+  static acceptRequest = async (gid: string) => {
+    const userId = User.id;
+    // TODO: Update group adding participant
+    // Change groupRequest data
+  };
+
+  static rejectRequest = async (gid: string) => {
+    const userId = User.id;
+    // TODO: Update group adding participant
+    // Change groupRequest data
   };
 }
 

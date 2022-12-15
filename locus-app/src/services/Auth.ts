@@ -27,6 +27,5 @@ export async function facebookLogin() {
   await auth().signInWithCredential(facebookCredential);
   const currentUser = auth().currentUser;
   // Sign-in the user with the credential
-  console.log(currentUser);
   return currentUser;
 }

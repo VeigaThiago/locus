@@ -1,6 +1,6 @@
 import { fetchGroup } from "../services/groups";
-import { getUser } from "../services/users";
 import { GroupType } from "./Group";
+import Users from "./Users";
 
 let instance: Groups;
 
@@ -10,12 +10,14 @@ class Groups {
   getGroup = async (gid: string) => {
     const group = await fetchGroup(gid);
 
-    const participants = await Promise.all(
-      group.participants.map((uid) => getUser(uid))
-    );
+    const [participants, owner] = await Promise.all([
+      Promise.all(group.participants.map((uid) => Users.getUser(uid))),
+      Users.getUser(group.owner),
+    ]);
 
     return {
       ...group,
+      owner,
       participants,
     };
   };

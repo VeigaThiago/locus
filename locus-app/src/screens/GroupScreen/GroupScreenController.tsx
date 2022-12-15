@@ -1,53 +1,67 @@
-import { ReactElement, cloneElement, useMemo } from "react";
+import { ReactElement, cloneElement, useState, useEffect } from "react";
 import { Alert } from "react-native";
 import { GroupFriendStackProps } from "../../../types";
+import { GroupType } from "../../model/Group";
 import User from "../../model/User";
 
 type GroupScreenControllerProps = {
   children: ReactElement;
-} & GroupFriendStackProps<"Friend">;
-
-const user = new User("1");
+} & GroupFriendStackProps<"Group">;
 
 const GroupScreenController = ({
   children,
   navigation,
 }: GroupScreenControllerProps) => {
-  const confirmedFriends = useMemo(() => user.getConfirmedFriends(), [user]);
-  const pendingFriends = useMemo(() => user.getPendingFriends(), [user]);
+  const [groups, setGroups] = useState<{
+    confirmedGroups: GroupType[];
+    pendingGroups: GroupType[];
+  }>({
+    confirmedGroups: [],
+    pendingGroups: [],
+  });
 
-  const onPendingFriendPress = (fid: string) => {
-    Alert.alert(
-      "Aceitar amizade?",
-      `Deseja aceitar o convite de amizade de ${
-        pendingFriends.find(({ id }) => (id = fid))?.name
-      }? Ele poderá lhe convidar para participar de grupos.`,
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Aceitar",
-          style: "default",
-          onPress: () => user.confirmFriend(fid),
-        },
-        {
-          text: "Rejeitar",
-          style: "destructive",
-          onPress: () => user.rejectFriend(fid),
-        },
-      ]
-    );
+  useEffect(() => {
+    const fetchFriends = async () => {
+      const [confirmedGroups, pendingGroups] = await Promise.all([
+        User.getConfirmedGroups(),
+        User.getPendingGroups(),
+      ]);
+      setGroups({ confirmedGroups, pendingGroups });
+    };
+    fetchFriends();
+  }, []);
+
+  const onCreateNewGroupPress = () =>
+    navigation.navigate("NewGroupParticipants");
+
+  const onConfirmedGroupPress = (gid: string) => {
+    const group = groups.confirmedGroups.find(({ id }) => gid == id);
+
+    if (group) {
+      navigation.navigate("GroupView", {
+        group,
+        status: "confirmed",
+      });
+    }
   };
 
-  const onConfirmedFriendPress = (fid: string) => {};
+  const onPendingGroupPress = (gid: string) => {
+    const group = groups.pendingGroups.find(({ id }) => gid == id);
 
-  const onAddNewFriendPress = () => navigation.navigate("AddFriend");
+    if (group) {
+      navigation.navigate("GroupView", {
+        group,
+        status: "pending",
+      });
+    }
+  };
 
   return cloneElement(children, {
-    onConfirmedFriendPress,
-    pendingFriends,
-    confirmedFriends,
-    onPendingFriendPress,
-    onAddNewFriendPress,
+    onCreateNewGroupPress,
+    confirmedGroups: groups.confirmedGroups,
+    pendingGroups: groups.pendingGroups,
+    onConfirmedGroupPress,
+    onPendingGroupPress,
   });
 };
 

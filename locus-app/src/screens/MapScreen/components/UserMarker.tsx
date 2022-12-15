@@ -14,8 +14,8 @@ const UserMarker = ({ user, onPress, isCurrentUser }: UserMarkerProps) => (
     tracksViewChanges
     identifier={user.id}
     coordinate={{
-      latitude: parseFloat(user.coords.latitude),
-      longitude: parseFloat(user.coords.longitude),
+      latitude: parseFloat(user?.coords?.latitude || "0"),
+      longitude: parseFloat(user?.coords?.longitude || "0"),
     }}
     title={user.name}
     onPress={() => onPress(user.id)}
@@ -24,7 +24,7 @@ const UserMarker = ({ user, onPress, isCurrentUser }: UserMarkerProps) => (
       source={{ uri: user.avatarUrl }}
       style={[
         styles.avatar,
-        { borderColor: convertPercentageToColor(user.battery.level) },
+        { borderColor: convertPercentageToColor(user?.battery?.level || 1) },
       ]}
     />
   </Marker>

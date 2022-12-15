@@ -1,6 +1,11 @@
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { Alert } from "react-native";
-import { getUserConfirmedGroupsIds } from "../services/users";
+import {
+  getUserConfirmedFriendsIds,
+  getUserConfirmedGroupsIds,
+  getUserPendingFriendsIds,
+  getUserPendingGroupsIds,
+} from "../services/users";
 import Group, { GroupType } from "./Group";
 import Groups from "./Groups";
 import Users from "./Users";
@@ -12,6 +17,14 @@ export type UserType = {
   name: string;
   email: string;
   avatarUrl: string;
+  coords?: {
+    latitude: string;
+    longitude: string;
+  };
+  battery?: {
+    level: number;
+    charging: boolean;
+  };
 };
 
 class User {
@@ -28,52 +41,34 @@ class User {
     Users.createUser(user);
   };
 
-  getFriends = () => {};
-
-  getConfirmedFriends = () => {
-    return [
-      {
-        id: "1",
-        name: "Mary Green",
-        email: "mary2@email.com",
-        avatarUrl: "https://source.unsplash.com/50x50/?portrait",
-      },
-      {
-        id: "2",
-        name: "Mary Green",
-        email: "mary@email.com",
-        avatarUrl: "https://source.unsplash.com/50x50/?portrait",
-      },
-      {
-        id: "3",
-        name: "Mary Green",
-        email: "",
-        avatarUrl: "https://source.unsplash.com/50x50/?portrait",
-      },
-    ];
+  me = async () => {
+    return Users.getUser(this.id || "");
   };
 
-  getPendingFriends = () => {
-    return [
-      {
-        id: "1",
-        name: "Mary Green",
-        email: "mary@email.com",
-        avatarUrl: "https://source.unsplash.com/50x50/?portrait",
-      },
-      {
-        id: "2",
-        name: "Mary Green",
-        email: "mary@email.com",
-        avatarUrl: "https://source.unsplash.com/50x50/?portrait",
-      },
-      {
-        id: "3",
-        name: "Mary Green",
-        email: "",
-        avatarUrl: "https://source.unsplash.com/50x50/?portrait",
-      },
-    ];
+  getFriends = async () => {
+    const [confirmed, pending] = await Promise.all([
+      this.getConfirmedFriends(),
+      this.getPendingFriends(),
+    ]);
+    return [...confirmed, ...pending];
+  };
+
+  getConfirmedFriends = async (): Promise<UserType[]> => {
+    const confirmedGroupsIds = await getUserConfirmedFriendsIds(this.id || "");
+
+    const mapped = await Promise.all(
+      confirmedGroupsIds.map((gid) => Users.getUser(gid))
+    );
+    return mapped;
+  };
+
+  getPendingFriends = async (): Promise<UserType[]> => {
+    const pendingFriendsIds = await getUserPendingFriendsIds(this.id || "");
+
+    const mapped = await Promise.all(
+      pendingFriendsIds.map((gid) => Users.getUser(gid))
+    );
+    return mapped;
   };
 
   confirmFriend = (fid: string) => {
@@ -93,7 +88,13 @@ class User {
     return mapped;
   };
 
-  getPendingGroups = () => {};
+  getPendingGroups = async (): Promise<GroupType[]> => {
+    const pendingGroupIds = await getUserPendingGroupsIds(this.id || "");
+    const mapped = await Promise.all(
+      pendingGroupIds.map((gid) => Group.getGroup(gid))
+    );
+    return mapped;
+  };
 
   getFormattedConfirmedGroups = async (): Promise<GroupType[]> => {
     const userGroups = await this.getConfirmedGroups();

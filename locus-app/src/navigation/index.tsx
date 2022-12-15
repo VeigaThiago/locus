@@ -31,6 +31,8 @@ import {
   FriendScreen,
   MapScreen,
   AddFriendScreen,
+  NewGroupParticipantsScreen,
+  GroupViewScreen,
 } from "../screens";
 import { colors } from "../ui/tokens";
 
@@ -125,6 +127,18 @@ function LoggedInStackNavigator() {
         options={{
           title: "Adicionar amigo",
         }}
+      />
+      <LoggedInStack.Screen
+        name="NewGroupParticipants"
+        component={NewGroupParticipantsScreen}
+        options={{
+          title: "Novo Grupo",
+        }}
+      />
+      <LoggedInStack.Screen
+        name="GroupView"
+        component={GroupViewScreen}
+        options={({ route }) => ({ title: route.params.group.name })}
       />
     </LoggedInStack.Navigator>
   );

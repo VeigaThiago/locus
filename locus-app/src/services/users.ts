@@ -37,7 +37,6 @@ const appendUserData = async (user: {
     await firestore().collection("customerLocation").doc(user.id).get(),
     await firestore().collection("batteryStatus").doc(user.id).get(),
   ]);
-  console.log(location);
 
   return { ...user, ...location.data(), battery: battery.data() };
 };
@@ -67,6 +66,29 @@ export const getUserConfirmedGroupsIds = async (
   userId: string
 ): Promise<string[]> => {
   const confirmedGroups = await allUserGroups(userId)
+    .where("pending", "==", false)
+    .where("confirmed", "==", true)
+    .get();
+  return confirmedGroups.docs.map((doc) => doc.id);
+};
+
+const allFriends = (userId: string) =>
+  firestore().collection("friends").doc(userId).collection("status");
+
+export const getUserPendingFriendsIds = async (
+  userId: string
+): Promise<string[]> => {
+  const pendingGroups = await allFriends(userId)
+    .where("pending", "==", true)
+    .where("confirmed", "==", false)
+    .get();
+  return pendingGroups.docs.map((doc) => doc.id);
+};
+
+export const getUserConfirmedFriendsIds = async (
+  userId: string
+): Promise<string[]> => {
+  const confirmedGroups = await allFriends(userId)
     .where("pending", "==", false)
     .where("confirmed", "==", true)
     .get();
