@@ -5,7 +5,7 @@ import {
   sendGroupRequest,
 } from "../services/groups";
 import Groups from "./Groups";
-import User, { UserType } from "./User";
+import { UserType } from "./User";
 
 export type GroupType = {
   name: string;
@@ -20,27 +20,29 @@ class Group {
     return group;
   };
 
-  static acceptRequest = async (gid: string) => {
-    const userId = User?.id;
+  static acceptRequest = async (userId: string, gid: string) => {
     if (userId) {
       await acceptGroupRequest(userId, gid);
     }
   };
 
-  static rejectRequest = async (gid: string) => {
-    const userId = User?.id;
+  static rejectRequest = async (userId: string, gid: string) => {
     if (userId) {
       await rejectGroupRequest(userId, gid);
     }
   };
 
-  static createGroup = async (name: string, participants: Array<UserType>) => {
+  static createGroup = async (
+    ownerId: string,
+    name: string,
+    participants: Array<UserType>
+  ) => {
     try {
-      if (User?.id) {
+      if (ownerId) {
         const group = await createGroup({
           name,
-          owner: User.id,
-          participants: [User?.id],
+          owner: ownerId,
+          participants: [ownerId],
         });
         await Promise.all(
           participants.map(({ id }) => sendGroupRequest(id, group.id))

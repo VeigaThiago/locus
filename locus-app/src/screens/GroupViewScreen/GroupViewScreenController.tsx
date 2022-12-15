@@ -27,7 +27,7 @@ const GroupViewScreenController = ({
         {
           text: "Aceitar",
           style: "default",
-          onPress: () => Group.acceptRequest(group.id),
+          onPress: () => User.acceptGroupRequest(group.id),
         },
       ]
     );
@@ -42,7 +42,7 @@ const GroupViewScreenController = ({
         {
           text: "Rejeitar",
           style: "destructive",
-          onPress: () => Group.rejectRequest(group.id),
+          onPress: () => User.rejectGroupRequest(group.id),
         },
       ]
     );

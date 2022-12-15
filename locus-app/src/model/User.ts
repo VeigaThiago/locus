@@ -131,6 +131,18 @@ class User {
       });
   };
 
+  createGroup = async (name: string, participants: Array<UserType>) => {
+    if (this.id) return Group.createGroup(this.id, name, participants);
+  };
+
+  acceptGroupRequest = async (gid: string) => {
+    if (this.id) return Group.acceptRequest(this.id, gid);
+  };
+
+  rejectGroupRequest = async (gid: string) => {
+    if (this.id) return Group.rejectRequest(this.id, gid);
+  };
+
   update = async ({ name, email }: { name: string; email: string }) => {
     if (this.id) {
       await updateUser({ id: this.id, name, email });

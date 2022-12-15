@@ -1,6 +1,6 @@
 import { ReactElement, cloneElement, useState } from "react";
 import { LoggedInStackProps } from "../../../../types";
-import Group from "../../../model/Group";
+import User from "../../../model/User";
 
 type NewGroupNameScreenControllerProps = {
   children: ReactElement;
@@ -16,7 +16,7 @@ const NewGroupNameScreenController = ({
   const onChangeName = setName;
 
   const onCreateGroupPress = () => {
-    const group = Group.createGroup(name, participants);
+    const group = User.createGroup(name, participants);
     //TODO: Navigate to GroupView
     navigation.navigate("Root");
   };
