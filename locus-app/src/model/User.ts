@@ -130,6 +130,10 @@ class User {
       });
   };
 
+  logout = () => {
+    instance = new User();
+  };
+
   static getInstance = () => {
     if (instance) return instance;
     else {

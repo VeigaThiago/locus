@@ -34,6 +34,7 @@ import {
   NewGroupParticipantsScreen,
   NewGroupNameScreen,
   GroupViewScreen,
+  SettingsScreen,
 } from "../screens";
 import { colors } from "../ui/tokens";
 
@@ -78,6 +79,7 @@ function GroupFriendsTabs() {
       <BackgroundTitle
         backgroundSrc={FriendGroupBackground}
         title={"Grupos & Amigos"}
+        iconName="people"
       />
       <TopTab.Navigator
         screenOptions={{
@@ -192,9 +194,9 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Settings"
-        component={GroupScreen}
+        component={SettingsScreen}
         options={() => ({
-          title: "Configurações",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="settings" color={color} />
           ),

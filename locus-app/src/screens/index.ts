@@ -6,3 +6,4 @@ export { default as AddFriendScreen } from "./AddFriendScreen";
 export { default as GroupViewScreen } from "./GroupViewScreen";
 export { default as NewGroupParticipantsScreen } from "./NewGroup/Participants";
 export { default as NewGroupNameScreen } from "./NewGroup/Name";
+export { default as SettingsScreen } from "./SettingsScreen";
