@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, SafeAreaView } from "react-native";
+import { View, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { FriendList } from "../../components";
 import { colors } from "../../ui/tokens";
 import DefaultFab from "../../components/Fab/Fab";
@@ -28,16 +28,18 @@ const FriendScreenView = ({
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <FriendList
-          title={"Confirmados"}
-          data={confirmedFriends}
-          onItemPress={onConfirmedFriendPress}
-        />
-        <FriendList
-          title={"Pendentes"}
-          data={pendingFriends}
-          onItemPress={onPendingFriendPress}
-        />
+        <View style={{ minHeight: 350 }}>
+          <FriendList
+            title={"Confirmados"}
+            data={confirmedFriends}
+            onItemPress={onConfirmedFriendPress}
+          />
+          <FriendList
+            title={"Pendentes"}
+            data={pendingFriends}
+            onItemPress={onPendingFriendPress}
+          />
+        </View>
       </ScrollView>
       <DefaultFab onPress={onAddNewFriendPress} />
     </SafeAreaView>

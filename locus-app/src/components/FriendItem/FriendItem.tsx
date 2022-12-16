@@ -1,4 +1,4 @@
-import { FontAwesome as Icon } from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   Text,
   View,
@@ -19,12 +19,16 @@ interface FriendItemProps {
   rightContent?: {
     rightDescription?: string;
     icon?: {
-      name?: React.ComponentProps<typeof Icon>["name"];
+      type?: string;
+      name?: React.ComponentProps<
+        typeof FontAwesome | typeof MaterialCommunityIcons
+      >["name"];
       color?: string;
       onPress?: () => void;
     };
   };
   onPress?: PressableProps["onPress"];
+  leftContent?: React.ReactNode;
 }
 
 const FriendItem = ({
@@ -33,31 +37,41 @@ const FriendItem = ({
   description = "",
   rightContent: {
     rightDescription,
-    icon: { onPress: onIconPress = undefined, ...iconProps } = {},
+    icon: {
+      type: iconType = "font-awesome",
+      onPress: onIconPress = undefined,
+      ...iconProps
+    } = {},
   } = {},
   onPress = () => {},
-}: FriendItemProps) => (
-  <Pressable onPress={onPress} style={styles.container}>
-    <Image source={avatarSrc} style={styles.avatar} />
-    <View style={styles.content}>
-      <Text style={styles.title}>{title}</Text>
-      {description && <Text style={styles.description}>{description}</Text>}
-    </View>
-    <View style={styles.rightContent}>
-      {rightDescription && (
-        <Text style={styles.rightDescription}>{rightDescription}</Text>
-      )}
-      {iconProps && (
-        <Pressable
-          onPress={onIconPress}
-          hitSlop={spacings.x1}
-          style={{ marginLeft: spacings.x2 }}
-        >
-          <Icon size={20} {...iconProps} />
-        </Pressable>
-      )}
-    </View>
-  </Pressable>
-);
+  leftContent,
+}: FriendItemProps) => {
+  const Icon =
+    iconType === "material-community" ? MaterialCommunityIcons : FontAwesome;
+  return (
+    <Pressable onPress={onPress} style={styles.container}>
+      {leftContent}
+      <Image source={avatarSrc} style={styles.avatar} />
+      <View style={styles.content}>
+        <Text style={styles.title}>{title}</Text>
+        {description && <Text style={styles.description}>{description}</Text>}
+      </View>
+      <View style={styles.rightContent}>
+        {rightDescription && (
+          <Text style={styles.rightDescription}>{rightDescription}</Text>
+        )}
+        {iconProps && (
+          <Pressable
+            onPress={onIconPress}
+            hitSlop={spacings.x1}
+            style={{ marginLeft: spacings.x2 }}
+          >
+            <Icon size={20} {...iconProps} />
+          </Pressable>
+        )}
+      </View>
+    </Pressable>
+  );
+};
 
 export default FriendItem;

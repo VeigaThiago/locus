@@ -1,14 +1,13 @@
 import * as React from "react";
-import { SafeAreaView } from "react-native";
+import { GroupFriendStackProps } from "../../../types";
+import GroupScreenController from "./GroupScreenController";
 import GroupScreenView from "./GroupScreenView";
 
-interface GroupScreenProps {}
-
-const GroupScreen = (props: GroupScreenProps) => {
+const GroupScreen = (props: GroupFriendStackProps<"Group">) => {
   return (
-    <SafeAreaView>
+    <GroupScreenController {...props}>
       <GroupScreenView />
-    </SafeAreaView>
+    </GroupScreenController>
   );
 };
 

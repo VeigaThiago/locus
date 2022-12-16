@@ -1,25 +1,16 @@
-import { fetchUsers } from "../services/users";
-import { UserType } from "./User";
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { createUser, fetchUsers, getUser } from "../services/users";
 
 let instance: Users;
 
 class Users {
   instance: Users | undefined = undefined;
 
-  users: UserType[] | undefined = undefined;
+  fetchUsers = async (term?: string) => fetchUsers(term);
 
-  getUsers = async (term?: string) => {
-    if (this.users) return this.users;
-    else {
-      await this.fetchUsers(term);
-      return this.users;
-    }
-  };
+  createUser = async (user: FirebaseAuthTypes.User) => createUser(user);
 
-  fetchUsers = async (term?: string) => {
-    const users = await fetchUsers(term);
-    this.users = users;
-  };
+  getUser = async (uid: string) => getUser(uid);
 
   static getInstance = () => {
     if (instance) return instance;

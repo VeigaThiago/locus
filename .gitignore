@@ -1,0 +1,4 @@
+yarn.lock
+locus-app/ios/locusapp/GoogleService-Info.plist
+locus-app/android/app/google-services.json
+node_modules/.yarn-integrity

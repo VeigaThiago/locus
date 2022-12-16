@@ -1,26 +1,25 @@
-import { fetchGroups } from "../services/groups";
+import { fetchGroup } from "../services/groups";
 import { GroupType } from "./Group";
+import Users from "./Users";
 
 let instance: Groups;
 
 class Groups {
   instance: Groups | undefined = undefined;
 
-  groups: { [gid: string]: GroupType } | undefined = undefined;
+  getGroup = async (gid: string) => {
+    const group = await fetchGroup(gid);
 
-  getGroups = async () => {
-    if (this.groups) return this.groups;
-    else {
-      await this.fetchGroups();
-      return this.groups;
-    }
-  };
+    const [participants, owner] = await Promise.all([
+      Promise.all(group.participants.map((uid) => Users.getUser(uid))),
+      Users.getUser(group.owner),
+    ]);
 
-  fetchGroups = async () => {
-    const fGroups = await fetchGroups();
-    this.groups = fGroups.reduce((acc, group) => {
-      return { ...acc, [group.id]: group };
-    }, {});
+    return {
+      ...group,
+      owner,
+      participants,
+    };
   };
 
   static getInstance = () => {

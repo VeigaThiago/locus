@@ -1,51 +1,88 @@
-import { ReactElement, cloneElement, useMemo } from "react";
+import { ReactElement, cloneElement, useState, useEffect } from "react";
 import { Alert } from "react-native";
 import { GroupFriendStackProps } from "../../../types";
-import User from "../../model/User";
+import User, { UserType } from "../../model/User";
 
 type FriendScreenControllerProps = {
   children: ReactElement;
 } & GroupFriendStackProps<"Friend">;
 
-const user = new User("1");
-
 const FriendScreenController = ({
   children,
   navigation,
 }: FriendScreenControllerProps) => {
-  const confirmedFriends = useMemo(() => user.getConfirmedFriends(), [user]);
-  const pendingFriends = useMemo(() => user.getPendingFriends(), [user]);
+  const [friends, setFriends] = useState<{
+    confirmedFriends: UserType[];
+    pendingFriends: UserType[];
+  }>({
+    confirmedFriends: [],
+    pendingFriends: [],
+  });
+
+  const fetchFriends = async () => {
+    const [confirmedFriends, pendingFriends] = await Promise.all([
+      User.getConfirmedFriends(),
+      User.getPendingFriends(),
+    ]);
+    setFriends({ confirmedFriends, pendingFriends });
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchFriends();
+    });
+
+    fetchFriends();
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const onPendingFriendPress = (fid: string) => {
     Alert.alert(
       "Aceitar amizade?",
       `Deseja aceitar o convite de amizade de ${
-        pendingFriends.find(({ id }) => (id = fid))?.name
+        friends.pendingFriends.find(({ id }) => (id = fid))?.name
       }? Ele poderá lhe convidar para participar de grupos.`,
       [
         { text: "Cancelar", style: "cancel" },
         {
           text: "Aceitar",
           style: "default",
-          onPress: () => user.confirmFriend(fid),
+          onPress: () => User.confirmFriend(fid).then(() => fetchFriends()),
         },
         {
           text: "Rejeitar",
           style: "destructive",
-          onPress: () => user.rejectFriend(fid),
+          onPress: () => User.rejectFriend(fid).then(() => fetchFriends()),
         },
       ]
     );
   };
 
-  const onConfirmedFriendPress = (fid: string) => {};
+  const onConfirmedFriendPress = (fid: string) => {
+    Alert.alert(
+      "Remover amigo",
+      `Deseja remover ${
+        friends.pendingFriends.find(({ id }) => (id = fid))?.name
+      } da sua lista de amigos? Vocês não poderão mais adicionar um no grupo do outro.`,
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Remover",
+          style: "destructive",
+          onPress: () => User.removeFriend(fid).then(() => fetchFriends()),
+        },
+      ]
+    );
+  };
 
   const onAddNewFriendPress = () => navigation.navigate("AddFriend");
 
   return cloneElement(children, {
     onConfirmedFriendPress,
-    pendingFriends,
-    confirmedFriends,
+    pendingFriends: friends.pendingFriends,
+    confirmedFriends: friends.confirmedFriends,
     onPendingFriendPress,
     onAddNewFriendPress,
   });

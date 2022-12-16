@@ -1,86 +1,125 @@
-import { Alert } from "react-native";
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import {
+  acceptFriendRequest,
+  getUserConfirmedFriendsIds,
+  getUserConfirmedGroupsIds,
+  getUserPendingFriendsIds,
+  getUserPendingGroupsIds,
+  rejectFriendRequest,
+  removeFriend,
+  sendFriendRequest,
+  updateLocation,
+  updateUser,
+} from "../services/users";
 import Group, { GroupType } from "./Group";
+import Users from "./Users";
+import Geolocation from "@react-native-community/geolocation";
+
+let instance: User;
 
 export type UserType = {
   id: string;
   name: string;
   email: string;
   avatarUrl: string;
+  coords?: {
+    latitude: string;
+    longitude: string;
+  };
+  battery?: {
+    level: number;
+    charging: boolean;
+  };
 };
 
 class User {
-  id: string = "";
+  id: string | undefined;
+  avatarUrl: string | null | undefined;
+  name: string | null | undefined;
+  email: string | null | undefined;
 
-  constructor(id: string) {
-    this.id = id;
-  }
-
-  getFriends = () => {};
-
-  getConfirmedFriends = () => {
-    return [
-      {
-        id: "1",
-        name: "Mary Green",
-        email: "mary2@email.com",
-        avatarUrl: "https://source.unsplash.com/50x50/?portrait",
-      },
-      {
-        id: "2",
-        name: "Mary Green",
-        email: "mary@email.com",
-        avatarUrl: "https://source.unsplash.com/50x50/?portrait",
-      },
-      {
-        id: "3",
-        name: "Mary Green",
-        email: "",
-        avatarUrl: "https://source.unsplash.com/50x50/?portrait",
-      },
-    ];
+  login = (user: FirebaseAuthTypes.User) => {
+    this.id = user.uid;
+    this.avatarUrl = user?.photoURL;
+    this.name = user.displayName;
+    this.email = user.email;
+    Users.createUser(user);
+    this.updateLocation();
   };
 
-  getPendingFriends = () => {
-    return [
-      {
-        id: "1",
-        name: "Mary Green",
-        email: "mary@email.com",
-        avatarUrl: "https://source.unsplash.com/50x50/?portrait",
-      },
-      {
-        id: "2",
-        name: "Mary Green",
-        email: "mary@email.com",
-        avatarUrl: "https://source.unsplash.com/50x50/?portrait",
-      },
-      {
-        id: "3",
-        name: "Mary Green",
-        email: "",
-        avatarUrl: "https://source.unsplash.com/50x50/?portrait",
-      },
-    ];
+  me = async () => {
+    return Users.getUser(this.id || "");
   };
 
-  confirmFriend = (fid: string) => {
-    Alert.alert(`Convite de amizade aceito == ${fid}`);
+  getFriends = async () => {
+    const [confirmed, pending] = await Promise.all([
+      this.getConfirmedFriends(),
+      this.getPendingFriends(),
+    ]);
+    return [...confirmed, ...pending];
   };
 
-  rejectFriend = (fid: string) => {
-    Alert.alert(`Convite de amizade rejeitado == ${fid}`);
-  };
+  getConfirmedFriends = async (): Promise<UserType[]> => {
+    const confirmedGroupsIds = await getUserConfirmedFriendsIds(this.id || "");
 
-  getGroups = async () => {
-    const userGroups = ["0001", "0002"];
     const mapped = await Promise.all(
-      userGroups.map((gid) => Group.getGroup(gid))
+      confirmedGroupsIds.map((gid) => Users.getUser(gid))
     );
     return mapped;
   };
 
-  getFormattedGroups = async (): Promise<GroupType[]> => {
-    const userGroups = (await this.getGroups()) as GroupType[];
+  getPendingFriends = async (): Promise<UserType[]> => {
+    const pendingFriendsIds = await getUserPendingFriendsIds(this.id || "");
+
+    const mapped = await Promise.all(
+      pendingFriendsIds.map((gid) => Users.getUser(gid))
+    );
+    return mapped;
+  };
+
+  confirmFriend = async (fid: string) => {
+    if (this.id) {
+      await acceptFriendRequest(this.id, fid);
+    }
+  };
+
+  rejectFriend = async (fid: string) => {
+    if (this.id) {
+      await rejectFriendRequest(this.id, fid);
+    }
+  };
+
+  addFriend = async (fid: string) => {
+    if (this.id) {
+      await sendFriendRequest(this.id, fid);
+    }
+  };
+
+  removeFriend = async (fid: string) => {
+    if (this.id) {
+      await removeFriend(this.id, fid);
+    }
+  };
+
+  getConfirmedGroups = async () => {
+    const confirmedGroupIds = await getUserConfirmedGroupsIds(this.id || "");
+
+    const mapped = await Promise.all(
+      confirmedGroupIds.map((gid) => Group.getGroup(gid))
+    );
+    return mapped;
+  };
+
+  getPendingGroups = async (): Promise<GroupType[]> => {
+    const pendingGroupIds = await getUserPendingGroupsIds(this.id || "");
+    const mapped = await Promise.all(
+      pendingGroupIds.map((gid) => Group.getGroup(gid))
+    );
+    return mapped;
+  };
+
+  getFormattedConfirmedGroups = async (): Promise<GroupType[]> => {
+    const userGroups = await this.getConfirmedGroups();
     return userGroups
       .filter((group) => group !== undefined)
       .map((group) => {
@@ -94,6 +133,51 @@ class User {
         };
       });
   };
+
+  createGroup = async (name: string, participants: Array<UserType>) => {
+    if (this.id) return Group.createGroup(this.id, name, participants);
+  };
+
+  acceptGroupRequest = async (gid: string) => {
+    if (this.id) return Group.acceptRequest(this.id, gid);
+  };
+
+  rejectGroupRequest = async (gid: string) => {
+    if (this.id) return Group.rejectRequest(this.id, gid);
+  };
+
+  update = async ({ name, email }: { name: string; email: string }) => {
+    if (this.id) {
+      await updateUser({ id: this.id, name, email });
+      this.name = name;
+      this.email = email;
+
+      return true;
+    }
+  };
+
+  updateLocation = async () => {
+    Geolocation.getCurrentPosition((info) => {
+      if (this.id) {
+        updateLocation(this.id, {
+          latitude: info.coords.latitude,
+          longitude: info.coords.longitude,
+        });
+      }
+    });
+  };
+
+  logout = () => {
+    instance = new User();
+  };
+
+  static getInstance = () => {
+    if (instance) return instance;
+    else {
+      instance = new User();
+      return instance;
+    }
+  };
 }
 
-export default User;
+export default User.getInstance();

@@ -1,3 +1,4 @@
+import { Octicons as Icon } from "@expo/vector-icons";
 import {
   View,
   StyleSheet,
@@ -10,13 +11,28 @@ import { colors, spacings, typography } from "../../ui/tokens";
 interface BackgroundTitleProps {
   backgroundSrc: ImageSourcePropType;
   title: string;
+  iconName?: React.ComponentProps<typeof Icon>["name"];
 }
 
-const BackgroundTitle = ({ backgroundSrc, title }: BackgroundTitleProps) => {
+const BackgroundTitle = ({
+  backgroundSrc,
+  title,
+  iconName,
+}: BackgroundTitleProps) => {
   return (
     <View style={styles.container}>
       <ImageBackground source={backgroundSrc} style={styles.background}>
-        <Text style={styles.title}>{title}</Text>
+        <View style={styles.titleContainer}>
+          {iconName && (
+            <Icon
+              size={40}
+              name={iconName}
+              color={colors.primary}
+              style={styles.icon}
+            />
+          )}
+          <Text style={styles.title}>{title}</Text>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -33,11 +49,17 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "flex-end",
   },
+  icon: {
+    marginHorizontal: spacings.x1,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: spacings.x3,
+    marginBottom: spacings.x3,
+  },
   title: {
     color: colors.primary,
     ...typography.pageTitle,
-    marginLeft: spacings.x3,
-    marginBottom: spacings.x3,
-    textDecorationLine: "underline",
   },
 });

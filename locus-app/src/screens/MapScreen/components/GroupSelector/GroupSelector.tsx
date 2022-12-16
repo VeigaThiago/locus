@@ -75,6 +75,7 @@ const GroupSelector = ({
           />
           {participants.map((item) => (
             <Friend
+              key={item.id}
               title={item.name.split(" ")[0]}
               avatarSrc={{ uri: item.avatarUrl }}
               onPress={() => onUserPress(item.id)}

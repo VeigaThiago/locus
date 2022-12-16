@@ -4,18 +4,20 @@ import { colors, spacings } from "../../ui/tokens";
 import { AntDesign as Icon } from "@expo/vector-icons";
 import { useCallback, useState } from "react";
 import { UserType } from "../../model/User";
-import { FriendItem } from "../../components";
+import { FriendItem, Error } from "../../components";
 
 interface AddFriendScreenViewProps {
   searchFriend?: (searchTerm: string) => void;
   users?: UserType[];
   hasSearchError?: boolean;
+  addFriend?: (user: UserType) => void;
 }
 
 const AddFriendScreenView = ({
   searchFriend = () => {},
   users = [],
   hasSearchError = false,
+  addFriend = () => {},
 }: AddFriendScreenViewProps) => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -23,6 +25,8 @@ const AddFriendScreenView = ({
     () => searchFriend(searchTerm),
     [searchTerm]
   );
+
+  const onAddFriendPress = useCallback((user: UserType) => addFriend(user), []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -45,15 +49,29 @@ const AddFriendScreenView = ({
           )}
         />
         <FlatList
+          ListEmptyComponent={
+            hasSearchError ? (
+              <Error description="Usuário não encontrado" />
+            ) : null
+          }
           data={users}
-          renderItem={({ item: { email, name, avatarUrl } }) => (
-            <FriendItem
-              key={email}
-              title={name}
-              description={email}
-              avatarSrc={{ uri: avatarUrl }}
-            />
-          )}
+          renderItem={({ item }) => {
+            const { id, email, name, avatarUrl } = item;
+            return (
+              <FriendItem
+                key={email}
+                title={name}
+                avatarSrc={{ uri: avatarUrl }}
+                rightContent={{
+                  icon: {
+                    onPress: () => onAddFriendPress(item),
+                    name: "plus",
+                    color: colors.primary,
+                  },
+                }}
+              />
+            );
+          }}
         />
       </View>
     </SafeAreaView>

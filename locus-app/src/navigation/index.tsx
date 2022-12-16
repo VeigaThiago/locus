@@ -31,6 +31,11 @@ import {
   FriendScreen,
   MapScreen,
   AddFriendScreen,
+  NewGroupParticipantsScreen,
+  NewGroupNameScreen,
+  GroupViewScreen,
+  SettingsScreen,
+  ProfileScreen,
 } from "../screens";
 import { colors } from "../ui/tokens";
 
@@ -75,6 +80,7 @@ function GroupFriendsTabs() {
       <BackgroundTitle
         backgroundSrc={FriendGroupBackground}
         title={"Grupos & Amigos"}
+        iconName="people"
       />
       <TopTab.Navigator
         screenOptions={{
@@ -126,6 +132,25 @@ function LoggedInStackNavigator() {
           title: "Adicionar amigo",
         }}
       />
+      <LoggedInStack.Screen
+        name="NewGroupParticipants"
+        component={NewGroupParticipantsScreen}
+        options={{
+          title: "Novo Grupo",
+        }}
+      />
+      <LoggedInStack.Screen
+        name="NewGroupName"
+        component={NewGroupNameScreen}
+        options={{
+          title: "Nome do grupo",
+        }}
+      />
+      <LoggedInStack.Screen
+        name="GroupView"
+        component={GroupViewScreen}
+        options={({ route }) => ({ title: route.params.group.name })}
+      />
     </LoggedInStack.Navigator>
   );
 }
@@ -142,8 +167,9 @@ function BottomTabNavigator() {
     >
       <BottomTab.Screen
         name="Profile"
-        component={GroupScreen}
+        component={ProfileScreen}
         options={() => ({
+          headerShown: false,
           title: "Perfil",
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         })}
@@ -170,9 +196,9 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Settings"
-        component={GroupScreen}
+        component={SettingsScreen}
         options={() => ({
-          title: "Configurações",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="settings" color={color} />
           ),

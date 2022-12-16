@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { View, StyleSheet, Dimensions, SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
+import { Error } from "../../components";
 import { GroupType } from "../../model/Group";
 import { colors, spacings } from "../../ui/tokens";
 import { UserMarker, GroupSelector, UserSelection } from "./components";
 
 export interface MapScreenViewProps {
   groups?: GroupType[];
+  loading?: boolean;
 }
 
-const MapScreenView = ({ groups = [] }: MapScreenViewProps) => {
+const MapScreenView = ({ groups = [], loading = true }: MapScreenViewProps) => {
   const [selectedGroupIndex, setSelectedGroupIndex] = useState(0);
   const selectedGroup = useMemo(
     () => groups[selectedGroupIndex] || { participants: [] },
@@ -36,12 +38,6 @@ const MapScreenView = ({ groups = [] }: MapScreenViewProps) => {
 
   const focusMap = (markerIds: string[]) => {
     _map.current?.fitToSuppliedMarkers(markerIds, {
-      edgePadding: {
-        top: 50,
-        right: 50,
-        bottom: 50,
-        left: 50,
-      },
       animated: true,
     });
   };
@@ -66,11 +62,22 @@ const MapScreenView = ({ groups = [] }: MapScreenViewProps) => {
   const onUserSelect = (uid: string) => {
     if (uid === "") {
       focusAllMap();
+      setSelectedUserId(undefined);
     } else {
       focusMap([uid]);
       setSelectedUserId(uid);
     }
   };
+
+  if (groups.length === 0 && !loading) {
+    return (
+      <SafeAreaView style={styles.screen}>
+        <View style={styles.error}>
+          <Error description="Você ainda não faz parte de nenhum grupo. Retorne após entrar em um." />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -83,9 +90,20 @@ const MapScreenView = ({ groups = [] }: MapScreenViewProps) => {
           onUserPress={onUserSelect}
         />
         <View style={{ top: 20 }}>
-          <MapView ref={_map} style={styles.map} maxZoomLevel={18}>
+          <MapView
+            ref={_map}
+            style={styles.map}
+            maxZoomLevel={18}
+            mapPadding={{
+              top: 200,
+              right: 0,
+              bottom: 200,
+              left: 0,
+            }}
+          >
             {selectedGroup?.participants?.map((user) => (
               <UserMarker
+                key={user.id}
                 user={user}
                 onPress={onUserSelect}
                 isCurrentUser={user.id === selectedUserId}
@@ -106,6 +124,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     flex: 1,
     paddingTop: spacings.x4,
+  },
+  error: {
+    justifyContent: "center",
+    backgroundColor: colors.white,
+    flex: 1,
+    paddingTop: 100,
   },
   container: {
     flex: 1,
