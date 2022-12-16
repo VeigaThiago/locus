@@ -1,5 +1,5 @@
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import { ReactElement, cloneElement, useMemo } from "react";
+import { ReactElement, cloneElement } from "react";
 import { RootStackScreenProps } from "../../../types";
 import User from "../../model/User";
 import { facebookLogin } from "../../services/Auth";
@@ -8,7 +8,7 @@ type LoginScreenControllerProps = {
   children: ReactElement;
 } & RootStackScreenProps<"LoggedOut">;
 
-const SKIP_LOGIN = true;
+const SKIP_LOGIN = false;
 const MOCKED_USER = {
   displayName: "Cássio de Sá",
   email: "sss.cassio@gmail.com",

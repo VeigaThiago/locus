@@ -26,12 +26,16 @@ const GroupScreenController = ({
     setGroups({ confirmedGroups, pendingGroups });
   };
 
-  // navigation.addListener("focus", () => {
-  //   fetchGroups();
-  // });
-
   useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchGroups();
+    });
+
     fetchGroups();
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const onCreateNewGroupPress = () =>

@@ -1,12 +1,16 @@
 import { ReactElement, cloneElement, useEffect, useState } from "react";
+import { RootTabScreenProps } from "../../../types";
 import { GroupType } from "../../model/Group";
 import User from "../../model/User";
 
 type MapScreenControllerProps = {
   children: ReactElement;
-};
+} & RootTabScreenProps<"Map">;
 
-const MapScreenController = ({ children }: MapScreenControllerProps) => {
+const MapScreenController = ({
+  navigation,
+  children,
+}: MapScreenControllerProps) => {
   const [groups, setGroups] = useState<GroupType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -17,7 +21,16 @@ const MapScreenController = ({ children }: MapScreenControllerProps) => {
   };
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      User.updateLocation();
+      getGroups();
+    });
+
     getGroups();
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return cloneElement(children, {

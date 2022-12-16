@@ -38,12 +38,6 @@ const MapScreenView = ({ groups = [], loading = true }: MapScreenViewProps) => {
 
   const focusMap = (markerIds: string[]) => {
     _map.current?.fitToSuppliedMarkers(markerIds, {
-      edgePadding: {
-        top: 50,
-        right: 50,
-        bottom: 50,
-        left: 50,
-      },
       animated: true,
     });
   };
@@ -68,6 +62,7 @@ const MapScreenView = ({ groups = [], loading = true }: MapScreenViewProps) => {
   const onUserSelect = (uid: string) => {
     if (uid === "") {
       focusAllMap();
+      setSelectedUserId(undefined);
     } else {
       focusMap([uid]);
       setSelectedUserId(uid);
@@ -95,9 +90,20 @@ const MapScreenView = ({ groups = [], loading = true }: MapScreenViewProps) => {
           onUserPress={onUserSelect}
         />
         <View style={{ top: 20 }}>
-          <MapView ref={_map} style={styles.map} maxZoomLevel={18}>
+          <MapView
+            ref={_map}
+            style={styles.map}
+            maxZoomLevel={18}
+            mapPadding={{
+              top: 200,
+              right: 0,
+              bottom: 200,
+              left: 0,
+            }}
+          >
             {selectedGroup?.participants?.map((user) => (
               <UserMarker
+                key={user.id}
                 user={user}
                 onPress={onUserSelect}
                 isCurrentUser={user.id === selectedUserId}

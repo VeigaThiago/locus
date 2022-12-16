@@ -1,14 +1,11 @@
-import { useMemo } from "react";
-import { SafeAreaView } from "react-native";
-import User from "../../model/User";
+import { RootTabScreenProps } from "../../../types";
+
 import MapScreenController from "./MapScreenController";
-import MapScreenView, { MapScreenViewProps } from "./MapScreenView";
+import MapScreenView from "./MapScreenView";
 
-interface MapScreenProps {}
-
-const MapScreen = (props: MapScreenProps) => {
+const MapScreen = (props: RootTabScreenProps<"Map">) => {
   return (
-    <MapScreenController>
+    <MapScreenController {...props}>
       <MapScreenView />
     </MapScreenController>
   );

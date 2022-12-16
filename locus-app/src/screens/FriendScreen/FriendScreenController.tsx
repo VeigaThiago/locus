@@ -28,7 +28,14 @@ const FriendScreenController = ({
   };
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchFriends();
+    });
+
     fetchFriends();
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const onPendingFriendPress = (fid: string) => {

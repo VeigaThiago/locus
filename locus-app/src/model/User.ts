@@ -44,12 +44,7 @@ class User {
     this.name = user.displayName;
     this.email = user.email;
     Users.createUser(user);
-    Geolocation.getCurrentPosition((info) => {
-      this.updateLocation({
-        latitude: info.coords.latitude,
-        longitude: info.coords.longitude,
-      });
-    });
+    this.updateLocation();
   };
 
   me = async () => {
@@ -161,10 +156,15 @@ class User {
     }
   };
 
-  updateLocation = async (coords: { latitude: number; longitude: number }) => {
-    if (this.id) {
-      await updateLocation(this.id, coords);
-    }
+  updateLocation = async () => {
+    Geolocation.getCurrentPosition((info) => {
+      if (this.id) {
+        updateLocation(this.id, {
+          latitude: info.coords.latitude,
+          longitude: info.coords.longitude,
+        });
+      }
+    });
   };
 
   logout = () => {
