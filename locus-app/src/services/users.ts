@@ -49,6 +49,8 @@ export const createUser = async (userData: FirebaseAuthTypes.User) => {
   });
 };
 
+const user = (id: string) => firestore().collection("users").doc(id);
+
 export const updateUser = async ({
   id,
   ...props
@@ -57,12 +59,16 @@ export const updateUser = async ({
   name?: string;
   email?: string;
 }) => {
-  return firestore()
-    .collection("users")
-    .doc(id)
-    .update({
-      ...props,
-    });
+  return user(id).update({
+    ...props,
+  });
+};
+
+export const updateLocation = async (
+  uid: string,
+  coords: { latitude: number; longitude: number }
+) => {
+  firestore().collection("customerLocation").doc(uid).set({ coords });
 };
 
 export const allUserGroups = (userId: string) =>

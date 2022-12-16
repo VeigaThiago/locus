@@ -85,5 +85,11 @@
 		<string>fbapi</string>
 		<string>fb-messenger-share-api</string>
 	</array>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Your location is required for share your location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is required for share your location</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location is required for share your location</string>
 </dict>
 </plist>

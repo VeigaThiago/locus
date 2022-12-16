@@ -8,10 +8,12 @@ import {
   rejectFriendRequest,
   removeFriend,
   sendFriendRequest,
+  updateLocation,
   updateUser,
 } from "../services/users";
 import Group, { GroupType } from "./Group";
 import Users from "./Users";
+import Geolocation from "@react-native-community/geolocation";
 
 let instance: User;
 
@@ -42,6 +44,12 @@ class User {
     this.name = user.displayName;
     this.email = user.email;
     Users.createUser(user);
+    Geolocation.getCurrentPosition((info) => {
+      this.updateLocation({
+        latitude: info.coords.latitude,
+        longitude: info.coords.longitude,
+      });
+    });
   };
 
   me = async () => {
@@ -150,6 +158,12 @@ class User {
       this.email = email;
 
       return true;
+    }
+  };
+
+  updateLocation = async (coords: { latitude: number; longitude: number }) => {
+    if (this.id) {
+      await updateLocation(this.id, coords);
     }
   };
 
