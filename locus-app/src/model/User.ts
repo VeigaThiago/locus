@@ -91,7 +91,7 @@ class User {
 
   addFriend = async (fid: string) => {
     if (this.id) {
-      await sendFriendRequest(this.id, fid);
+      return await sendFriendRequest(this.id, fid);
     }
   };
 

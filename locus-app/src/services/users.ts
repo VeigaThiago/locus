@@ -125,11 +125,11 @@ const friendUserRelation = (uid: string, fid: string) =>
 
 export const sendFriendRequest = async (uid: string, fid: string) => {
   await Promise.all([
-    userFriendRelation(uid, fid).update({
+    userFriendRelation(uid, fid).set({
       confirmed: true,
       pending: true,
     }),
-    friendUserRelation(uid, fid).update({
+    friendUserRelation(uid, fid).set({
       confirmed: false,
       pending: true,
     }),
